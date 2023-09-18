@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.assignment.Home"
+        android:label="Home">
+        <!-- Specify fragment-specific actions or actions leading to other destinations -->
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.assignment.Profile"
+        android:label="Profile">
+        <!-- Specify fragment-specific actions or actions leading to other destinations -->
+    </fragment>
+
+    <!-- Add more fragments as needed -->
+</navigation>

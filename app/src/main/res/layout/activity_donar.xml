@@ -19,7 +19,7 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/EditFoodName"
+        app:layout_constraintBottom_toTopOf="@+id/editFoodName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -48,34 +48,46 @@
         android:id="@+id/type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="88dp"
         android:text="Type"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
+        app:layout_constraintTop_toBottomOf="@+id/description" />
 
-    <RadioButton
-        android:id="@+id/food"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="284dp"
-        android:text="Food"
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="191dp"
+        android:layout_height="402dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
         app:layout_constraintStart_toEndOf="@+id/type"
-        app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
+        app:layout_constraintTop_toBottomOf="@+id/titleDonar">
 
-    <RadioButton
-        android:id="@+id/drink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="284dp"
-        android:text="Drink"
-        app:layout_constraintStart_toEndOf="@+id/food"
-        app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
+        <RadioButton
+            android:id="@+id/food"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="284dp"
+            android:text="Food"
+            app:layout_constraintStart_toEndOf="@+id/type"
+            app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
+
+        <RadioButton
+            android:id="@+id/drink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="284dp"
+            android:text="Drink"
+            app:layout_constraintStart_toEndOf="@+id/food"
+            app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
+
+    </RadioGroup>
 
     <EditText
-        android:id="@+id/EditFoodName"
+        android:id="@+id/editFoodName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/textborder"
@@ -88,7 +100,7 @@
         app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
 
     <EditText
-        android:id="@+id/EditDes"
+        android:id="@+id/editDes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/textborder"

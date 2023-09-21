@@ -35,24 +35,41 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        binding.loginButton.setOnClickListener{
+        binding.loginButton.setOnClickListener {
             val email = binding.loginEmail.text.toString()
             val password = binding.loginPassword.text.toString()
 
-            if (email.isNotEmpty() && password.isNotEmpty()){
-
-                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener{
-                    if(it.isSuccessful){
-                        val intent =  Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                    }else{
-                        Toast.makeText(this,it.exception.toString(), Toast.LENGTH_SHORT).show()
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                if (email.equals("admin@gmail.com") && password.equals("admin123")) {
+                    firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            val intent = Intent(this, AdminActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                        }
                     }
+                } else {
+                    firebaseAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                val intent = Intent(this, MainActivity::class.java)
+                                startActivity(intent)
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    it.exception.toString(),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                 }
-            }else{
-                Toast.makeText(this,"Fields cannot be empty", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
             }
         }
+
         binding.signupRedirectText.setOnClickListener{
             val signupIntent = Intent(this, SignupActivity::class.java)
             startActivity(signupIntent)

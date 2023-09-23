@@ -36,4 +36,14 @@
         android:layout_gravity="center_horizontal"
         android:text="Donor" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+    <Button
+        android:id="@+id/homeBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Home" />
+
 </LinearLayout>

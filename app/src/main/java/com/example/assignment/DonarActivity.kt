@@ -91,7 +91,8 @@ class DonarActivity : AppCompatActivity() {
                 val foodMap = hashMapOf(
                     "foodName" to editFoodName,
                     "foodDes" to editDes,
-                    "foodOrDrink" to selectedValue // Store the selected value, not the RadioGroup
+                    "foodOrDrink" to selectedValue, // Store the selected value, not the RadioGroup
+                    "userId" to userId
                 )
 
                 // Reference a new document with a generated ID

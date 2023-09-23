@@ -2,15 +2,25 @@ package com.example.assignment
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.assignment.R.id.tab_layout_Home
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.QuerySnapshot
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var tabLayout1 : TabLayout
     private lateinit var viewPagerHome : ViewPager2
     private lateinit var homeViewPagerAdapter : HomeViewPagerAdapter
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -43,5 +53,5 @@ class HomeActivity : AppCompatActivity() {
                 tabLayout1.getTabAt(position)?.select()
             }
         })
-    }
+   }
 }

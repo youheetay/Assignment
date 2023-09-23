@@ -11,4 +11,10 @@
         android:layout_height="match_parent"
         android:text="Home Requestor" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewReq"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/reqlist_item"/>
+
 </FrameLayout>

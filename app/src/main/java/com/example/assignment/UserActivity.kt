@@ -24,7 +24,7 @@ class UserActivity : AppCompatActivity() {
         }
 
         binding.homeBtn.setOnClickListener{
-            val Intent = Intent(this,MainActivity::class.java)
+            val Intent = Intent(this,HomeActivity::class.java)
             startActivity(Intent)
         }
     }

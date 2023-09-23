@@ -1,30 +1,11 @@
 package com.example.assignment
 
-import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract.ProfileSyncState
 import android.widget.Button
-import android.widget.EditText
 import android.widget.NumberPicker
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.fragment.app.Fragment
-import com.example.assignment.databinding.ActivityDonarBinding
-import com.example.assignment.databinding.ActivityRequesterBinding
-import com.example.assignment.ui.theme.AssignmentTheme
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -41,7 +22,7 @@ class RequesterActivity : AppCompatActivity() {
 //        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.buttonNavigationView)
 
         val textView5 : TextView = findViewById(R.id.textView5)
-        var editFoodNameR : TextView = findViewById(R.id.foodNameR)
+        var editFoodNameR : TextView = findViewById(R.id.foodNameReq)
         var editDesR : TextView = findViewById(R.id.descriptionR)
         val quantity : NumberPicker = findViewById(R.id.numberPicker)
         quantity.maxValue = 60
@@ -81,7 +62,7 @@ class RequesterActivity : AppCompatActivity() {
             if (currentUser != null) {
                 val userId = currentUser.uid
                 // Create a specific document ID (e.g., using the user's ID or a custom ID)
-                val documentId = "requestFood1"  // Replace with your desired ID
+
 
                 val requestMap = hashMapOf(
                     "foodNameR" to editFoodNameR,
@@ -90,7 +71,7 @@ class RequesterActivity : AppCompatActivity() {
                 )
 
                 // Reference a new document with a generated ID
-                db.collection("foodR").document(documentId).set(requestMap)
+                db.collection("foodR").add(requestMap)
                     .addOnSuccessListener {
                         Toast.makeText(this, "Successfully Request Food!", Toast.LENGTH_SHORT).show()
                         // Finish the current activity to go back to the previous page

@@ -61,6 +61,11 @@ class HistoryActivity : AppCompatActivity() {
                 for (document in value!!.documents) {
                     val foodData = document.toObject(Food::class.java)
                     if (foodData != null) {
+                        // Get the document ID
+                        val foodId = document.id
+
+                        // Add the document ID along with other data to the list
+                        foodData.id = foodId
                         foodArrayList.add(foodData)
                     }
                 }

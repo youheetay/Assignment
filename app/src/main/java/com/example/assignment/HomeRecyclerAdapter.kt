@@ -25,5 +25,6 @@ class HomeRecyclerAdapter (private val foodList: ArrayList<Food>): RecyclerView.
     public class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val foodName : TextView = itemView.findViewById(R.id.tvFoodName)
         val foodDes : TextView = itemView.findViewById(R.id.tvFoodDes)
+
     }
 }

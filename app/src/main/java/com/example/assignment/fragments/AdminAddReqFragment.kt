@@ -7,14 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.assignment.R
 
-class RequestorFragment : Fragment() {
-
+class AdminAddReqFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_requestor, container, false)
+        return inflater.inflate(R.layout.fragment_admin_add_req, container, false)
     }
 
 }

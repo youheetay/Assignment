@@ -1,15 +1,19 @@
 package com.example.assignment.fragments
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.example.assignment.AdminAddReq
 import com.example.assignment.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
+
 
 class AdminRequestFragment : Fragment() {
 
@@ -23,28 +27,26 @@ class AdminRequestFragment : Fragment() {
         // Inflate the layout for this fragment
         val rootView = inflater.inflate(R.layout.fragment_admin_request, container, false)
 
-        rootView.findViewById<Button>(R.id.create).setOnClickListener{
-            val textEnter = rootView.findViewById<EditText>(R.id.name).text.toString()
 
-            val taskData = hashMapOf(
-                "Name" to textEnter
-            )
-
-            collectionReference.add(taskData)
-                .addOnSuccessListener { documentReference ->
-                    //val taskId = documentReference.id
-                    Toast.makeText(requireContext(), "Create Success", Toast.LENGTH_SHORT).show()
-
-                    // Perform any additional actions or UI updates
-                }
-                .addOnFailureListener { e ->
-                    // Handle failure
-                    Toast.makeText(requireContext(), "Error adding task: ${e.message}", Toast.LENGTH_SHORT).show()
-
-                }
+        rootView.findViewById<FloatingActionButton>(R.id.CreateButton).setOnClickListener{
+            val intent = Intent(activity, AdminAddReq::class.java)
+            startActivity(intent)
         }
+
+//        rootView.findViewById<FloatingActionButton>(R.id.CreateButton).setOnClickListener {
+//            val fragment = AdminAddReqFragment()
+//            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+//            transaction.replace(R.id.AdminReq, fragment)
+//            transaction.addToBackStack(null)
+//
+//            transaction.commit()
+//            rootView.findViewById<FrameLayout>(R.id.AdminReq).visibility = View.GONE
+//        }
+
+
 
         return rootView
     }
+
 
 }

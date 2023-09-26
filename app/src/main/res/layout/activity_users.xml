@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="140dp"
+        android:backgroundTint="#E81A1A"
         android:text="Requester" />
 
     <!-- Add some spacing between the buttons -->
@@ -35,5 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Donor" />
+
+
 
 </LinearLayout>

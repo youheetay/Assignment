@@ -4,15 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.ComponentActivity
+import com.example.assignment.databinding.ActivityUsersBinding
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var binding: ActivityUsersBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_users)
+        binding = ActivityUsersBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val donarButton: Button = findViewById(R.id.donarButton)
-
-        donarButton.setOnClickListener {
+        binding.donarButton.setOnClickListener {
             val donarIntent = Intent(this, DonarActivity::class.java)
             startActivity(donarIntent)
         }

@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.NumberPicker
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,6 +41,8 @@ class DonarActivity : AppCompatActivity() {
 
     private val STORAGE_PERMISSION_CODE = 101 // Request code for storage permission
 
+    private lateinit var quantityDonar: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDonarBinding.inflate(layoutInflater)
@@ -51,6 +55,18 @@ class DonarActivity : AppCompatActivity() {
         browseBtn = findViewById(R.id.browseBtn)
         uploadBtn = findViewById(R.id.uploadBtn)
         image = findViewById(R.id.imageView)
+        quantityDonar = findViewById(R.id.quantityDonar)
+
+        val quantity : NumberPicker = findViewById(R.id.selectQuantity)
+        quantity.maxValue = 60
+        quantity.minValue = 1
+        quantity.wrapSelectorWheel = true
+        quantity.setOnValueChangedListener {
+                numberPicker,
+                oldValue,
+                newValue -> quantityDonar.text = "Quantity : $newValue"
+        }
+
 
         // Set up a listener for item clicks
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
@@ -80,30 +96,54 @@ class DonarActivity : AppCompatActivity() {
         binding.submitBtn.setOnClickListener {
             val editFoodName = editFoodName.text.toString()
             val editDes = editDes.text.toString()
+            val quantity = quantity.value
 
             val currentUser = FirebaseAuth.getInstance().currentUser
             if (currentUser != null) {
                 val userId = currentUser.uid
 
-                val foodMap = hashMapOf(
-                    "foodName" to editFoodName,
-                    "foodDes" to editDes,
-                    "userId" to userId
-                )
+                if (uri != null) {
+                    // Upload the image first
+                    val storageRef = storageRef.getReference("images").child(System.currentTimeMillis().toString())
+                    storageRef.putFile(uri!!)
+                        .addOnSuccessListener { task ->
+                            task.metadata?.reference?.downloadUrl
+                                ?.addOnSuccessListener { downloadUri ->
+                                    // After uploading the image, create a new Food document
+                                    // with the same document ID as the image
+                                    val food = Food(
+                                        id = task.metadata?.name, // Use the image's document ID
+                                        foodName = editFoodName,
+                                        foodDes = editDes,
+                                        userId = userId,
+                                        image = downloadUri.toString(),
+                                        quantity = quantity
+                                    )
 
-                // Reference a new document with a generated ID
-                db.collection("food").add(foodMap)
-                    .addOnSuccessListener {
-                        Toast.makeText(this, "Successfully Create Food!", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "Failed To Create Food!", Toast.LENGTH_SHORT).show()
-                    }
+                                    // Store the Food object in Firestore with the same document ID
+                                    db.collection("food").document(task.metadata?.name ?: "")
+                                        .set(food)
+                                        .addOnSuccessListener {
+                                            Toast.makeText(this, "Upload Successful", Toast.LENGTH_SHORT).show()
+                                        }
+                                        .addOnFailureListener { error ->
+                                            Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show()
+                                        }
+                                }
+                        }
+                        .addOnFailureListener { error ->
+                            Toast.makeText(this, "Upload failed: $error", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    // Handle the case where uri is not initialized (e.g., show an error message)
+                    Toast.makeText(this, "Please upload an image of food", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 // Handle the case where the user is not signed in
                 Toast.makeText(this, "User not signed in", Toast.LENGTH_SHORT).show()
             }
         }
+
 
         binding.cancelBtn.setOnClickListener {
             finish()
@@ -123,44 +163,50 @@ class DonarActivity : AppCompatActivity() {
             galleryImage.launch("image/*")
         }
 
-        binding.uploadBtn.setOnClickListener {
-            if (uri != null) {
-                val userId = FirebaseAuth.getInstance().currentUser?.uid
-                if (userId != null) {
-                    val storageRef = storageRef.getReference("images").child(System.currentTimeMillis().toString())
-                    storageRef.putFile(uri!!)
-                        .addOnSuccessListener { task ->
-                            task.metadata?.reference?.downloadUrl
-                                ?.addOnSuccessListener { downloadUri ->
-                                    val mapImage = mapOf(
-                                        "url" to downloadUri.toString()
-                                    )
+      // binding.uploadBtn.setOnClickListener {
+//            if (uri != null) {
+//                val userId = FirebaseAuth.getInstance().currentUser?.uid
+//                if (userId != null) {
+//                    val storageRef = storageRef.getReference("images").child(System.currentTimeMillis().toString())
+//                    storageRef.putFile(uri!!)
+//                        .addOnSuccessListener { task ->
+//                            task.metadata?.reference?.downloadUrl
+//                                ?.addOnSuccessListener { downloadUri ->
+//                                    // After uploading the image, create a new Food document
+//                                    // with the same document ID as the image
+//                                    val food = Food(
+//                                        id = task.metadata?.name, // Use the image's document ID
+//                                        foodName = editFoodName.text.toString(),
+//                                        foodDes = editDes.text.toString(),
+//                                        userId = userId,
+//                                        image = downloadUri.toString()
+//                                    )
+//
+//                                    // Store the Food object in Firestore with the same document ID
+//                                    db.collection("foodPendingDonar").document(task.metadata?.name ?: "")
+//                                        .set(food)
+//                                        .addOnSuccessListener {
+//                                            Toast.makeText(
+//                                                this,
+//                                                "Upload Successful",
+//                                                Toast.LENGTH_SHORT
+//                                            ).show()
+//                                        }
+//                                        .addOnFailureListener { error ->
+//                                            Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show()
+//                                        }
+//                                }
+//                        }
+//                        .addOnFailureListener { error ->
+//                            Toast.makeText(this, "Upload failed: $error", Toast.LENGTH_SHORT).show()
+//                        }
+//                }
+//            } else {
+//                // Handle the case where uri is not initialized (e.g., show an error message)
+//                Toast.makeText(this, "Please upload an image of food", Toast.LENGTH_SHORT).show()
+//            }
+   // }
 
-                                    val databaseReference =
-                                        FirebaseDatabase.getInstance().getReference("foodImages")
-                                    databaseReference.child(userId).setValue(mapImage)
-                                        .addOnSuccessListener {
-                                            Toast.makeText(
-                                                this,
-                                                "Upload Successful",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                        .addOnFailureListener { error ->
-                                            Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT)
-                                                .show()
-                                        }
-                                }
-                        }
-                        .addOnFailureListener { error ->
-                            Toast.makeText(this, "Upload failed: $error", Toast.LENGTH_SHORT).show()
-                        }
-                }
-            } else {
-                // Handle the case where uri is not initialized (e.g., show an error message)
-                Toast.makeText(this, "URI is not initialized", Toast.LENGTH_SHORT).show()
-            }
-        }
 
         image?.setImageResource(R.drawable.baseline_image_24)
 

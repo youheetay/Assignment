@@ -28,7 +28,7 @@ class UpdateDonorScreenFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-       val view = inflater.inflate(R.layout.fragment_update_donor_screen, container, false)
+        val view = inflater.inflate(R.layout.fragment_update_donor_screen, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())

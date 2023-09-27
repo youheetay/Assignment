@@ -1,5 +1,6 @@
 package com.example.assignment
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.assignment.R.id.tab_layout_Home
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
@@ -30,6 +32,7 @@ class HomeActivity : AppCompatActivity() {
         homeViewPagerAdapter =  HomeViewPagerAdapter(this)
         viewPagerHome.setAdapter(homeViewPagerAdapter)
 
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.buttonNavigationView)
         //tabLayout.setupWithViewPager(viewPager2)
 
         tabLayout1.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
@@ -53,5 +56,30 @@ class HomeActivity : AppCompatActivity() {
                 tabLayout1.getTabAt(position)?.select()
             }
         })
+
+        // Set up a listener for item clicks
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.home -> {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    true // Return true to indicate that the item click is handled
+                }
+
+                R.id.cart -> {
+                    val intent = Intent(this, CartActivity::class.java)
+                    startActivity(intent)
+                    true // Return true to indicate that the item click is handled
+                }
+
+                R.id.profile -> {
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    startActivity(intent)
+                    true // Return true to indicate that the item click is handled
+                }
+
+                else -> false // Return false for items that are not handled
+            }
+        }
    }
 }

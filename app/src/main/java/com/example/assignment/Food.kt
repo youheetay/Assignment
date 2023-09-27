@@ -7,14 +7,16 @@ data class Food(
     var foodName: String? = null,
     var foodDes: String? = null,
     var userId: String? = null,
-    var image: String?= null
+    var image: String?= null,
+    var quantity: Int ?= null
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readString()
+        parcel.readString(),
+        parcel.readInt()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -23,6 +25,7 @@ data class Food(
         parcel.writeString(foodDes)
         parcel.writeString(userId)
         parcel.writeString(image)
+        parcel.writeInt(quantity ?: 0) // Use a default value (e.g., 0) if quantity is null
     }
 
     override fun describeContents(): Int {

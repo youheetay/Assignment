@@ -54,7 +54,7 @@ class DonorFoodUpdateFragment : Fragment() {
             val updatedFoodName = editFoodName.text.toString()
             val updatedFoodDes = editFoodDes.text.toString()
 
-            // Update the notification data in Firestore
+            // Update the food data in Firestore
             foodEdit?.let { food ->
                 val db = FirebaseFirestore.getInstance()
 

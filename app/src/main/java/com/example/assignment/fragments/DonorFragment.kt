@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.Food
@@ -31,14 +32,13 @@ class DonorFragment : Fragment() {
         // Inflate the layout for this fragment
         val rootView =  inflater.inflate(R.layout.fragment_donor, container, false)
 
-
         recyclerView = rootView.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
 
         foodArrayList = arrayListOf()
 
-        homeRecyclerAdapter2 = HomeRecyclerAdapter2(foodArrayList)
+        homeRecyclerAdapter2 = HomeRecyclerAdapter2(requireContext(),foodArrayList,requireContext())
 
         recyclerView.adapter = homeRecyclerAdapter2
 

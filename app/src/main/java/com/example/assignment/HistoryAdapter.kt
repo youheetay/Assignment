@@ -51,7 +51,6 @@ class HistoryAdapter (private val context: Context, private val foodList: ArrayL
             args.putParcelable(ARG_FOOD, foodEdit)
             editDialogFragment.arguments = args
 
-
             val fragmentManager = (context as AppCompatActivity).supportFragmentManager
             fragmentManager.beginTransaction()
                 .replace(R.id.admin_fl_wrapper, editDialogFragment)

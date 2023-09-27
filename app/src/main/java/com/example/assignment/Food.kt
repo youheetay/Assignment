@@ -6,9 +6,11 @@ data class Food(
     var id: String? = null,
     var foodName: String? = null,
     var foodDes: String? = null,
-    var userId: String? = null
+    var userId: String? = null,
+    var image: String?= null
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
@@ -20,6 +22,7 @@ data class Food(
         parcel.writeString(foodName)
         parcel.writeString(foodDes)
         parcel.writeString(userId)
+        parcel.writeString(image)
     }
 
     override fun describeContents(): Int {

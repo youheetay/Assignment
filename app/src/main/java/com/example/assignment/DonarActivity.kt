@@ -1,30 +1,24 @@
 package com.example.assignment
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.provider.ContactsContract.ProfileSyncState
 import android.widget.Button
 import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.RadioGroup
+import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.fragment.app.Fragment
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.assignment.databinding.ActivityDonarBinding
-import com.example.assignment.ui.theme.AssignmentTheme
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 
 class DonarActivity : AppCompatActivity() {
 
@@ -33,10 +27,18 @@ class DonarActivity : AppCompatActivity() {
 
     private lateinit var editFoodName: EditText
     private lateinit var editDes: EditText
-    private lateinit var food: RadioButton
-    private lateinit var drink: RadioButton
     private lateinit var submitBtn: Button
     private lateinit var cancelBtn: Button
+
+    private var image: ImageView? = null // Initialize with null
+    private lateinit var browseBtn: Button
+    private lateinit var uploadBtn: Button
+
+    private var storageRef = Firebase.storage
+    private var uri: Uri? = null // Initialize with null
+
+    private val STORAGE_PERMISSION_CODE = 101 // Request code for storage permission
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDonarBinding.inflate(layoutInflater)
@@ -46,8 +48,9 @@ class DonarActivity : AppCompatActivity() {
 
         editFoodName = findViewById(R.id.editFoodName)
         editDes = findViewById(R.id.editDes)
-        food = findViewById(R.id.food)
-        drink = findViewById(R.id.drink)
+        browseBtn = findViewById(R.id.browseBtn)
+        uploadBtn = findViewById(R.id.uploadBtn)
+        image = findViewById(R.id.imageView)
 
         // Set up a listener for item clicks
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
@@ -57,17 +60,19 @@ class DonarActivity : AppCompatActivity() {
                     startActivity(intent)
                     true // Return true to indicate that the item click is handled
                 }
+
                 R.id.cart -> {
                     val intent = Intent(this, CartActivity::class.java)
                     startActivity(intent)
                     true // Return true to indicate that the item click is handled
                 }
+
                 R.id.profile -> {
                     val intent = Intent(this, ProfileActivity::class.java)
                     startActivity(intent)
                     true // Return true to indicate that the item click is handled
                 }
-                // Add more cases for other items if needed
+
                 else -> false // Return false for items that are not handled
             }
         }
@@ -76,14 +81,6 @@ class DonarActivity : AppCompatActivity() {
             val editFoodName = editFoodName.text.toString()
             val editDes = editDes.text.toString()
 
-            val radioGroup = findViewById<RadioGroup>(R.id.radioGroup)
-
-            val selectedValue = when (radioGroup.checkedRadioButtonId) {
-                R.id.food -> "FOOD"
-                R.id.drink -> "DRINK"
-                else -> "No selection"
-            }
-
             val currentUser = FirebaseAuth.getInstance().currentUser
             if (currentUser != null) {
                 val userId = currentUser.uid
@@ -91,7 +88,6 @@ class DonarActivity : AppCompatActivity() {
                 val foodMap = hashMapOf(
                     "foodName" to editFoodName,
                     "foodDes" to editDes,
-                    "foodOrDrink" to selectedValue, // Store the selected value, not the RadioGroup
                     "userId" to userId
                 )
 
@@ -100,7 +96,7 @@ class DonarActivity : AppCompatActivity() {
                     .addOnSuccessListener {
                         Toast.makeText(this, "Successfully Create Food!", Toast.LENGTH_SHORT).show()
                     }
-                    .addOnFailureListener{
+                    .addOnFailureListener {
                         Toast.makeText(this, "Failed To Create Food!", Toast.LENGTH_SHORT).show()
                     }
             } else {
@@ -112,5 +108,116 @@ class DonarActivity : AppCompatActivity() {
         binding.cancelBtn.setOnClickListener {
             finish()
         }
+
+        val galleryImage = registerForActivityResult(
+            ActivityResultContracts.GetContent(),
+            ActivityResultCallback { resultUri ->
+                uri = resultUri
+                image?.setImageURI(resultUri)
+            })
+
+        binding.browseBtn.setOnClickListener {
+            // Request storage permission when the user clicks the "Browse" button
+            requestStoragePermission()
+            // Launch the image picker after requesting permission
+            galleryImage.launch("image/*")
+        }
+
+        binding.uploadBtn.setOnClickListener {
+            if (uri != null) {
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+                if (userId != null) {
+                    val storageRef = storageRef.getReference("images").child(System.currentTimeMillis().toString())
+                    storageRef.putFile(uri!!)
+                        .addOnSuccessListener { task ->
+                            task.metadata?.reference?.downloadUrl
+                                ?.addOnSuccessListener { downloadUri ->
+                                    val mapImage = mapOf(
+                                        "url" to downloadUri.toString()
+                                    )
+
+                                    val databaseReference =
+                                        FirebaseDatabase.getInstance().getReference("foodImages")
+                                    databaseReference.child(userId).setValue(mapImage)
+                                        .addOnSuccessListener {
+                                            Toast.makeText(
+                                                this,
+                                                "Upload Successful",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                        .addOnFailureListener { error ->
+                                            Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT)
+                                                .show()
+                                        }
+                                }
+                        }
+                        .addOnFailureListener { error ->
+                            Toast.makeText(this, "Upload failed: $error", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            } else {
+                // Handle the case where uri is not initialized (e.g., show an error message)
+                Toast.makeText(this, "URI is not initialized", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        image?.setImageResource(R.drawable.baseline_image_24)
+
+        // Resize the ImageView
+        val newWidthInPixels = 300 // Adjust this value as needed
+        val newHeightInPixels = 300 // Adjust this value as needed
+        val layoutParams = image?.layoutParams
+        layoutParams?.width = newWidthInPixels
+        layoutParams?.height = newHeightInPixels
+        image?.layoutParams = layoutParams
+    }
+
+    private fun requestStoragePermission() {
+        // Check if permission is already granted
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission hasn't been granted, request it
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                STORAGE_PERMISSION_CODE
+            )
+        }
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission hasn't been granted, request it
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                STORAGE_PERMISSION_CODE
+            )
+        }
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, you can now proceed with uploading the image
+                // Call the method or code to upload the image here
+            } else {
+                // Permission denied, show a message to the user or handle it accordingly
+                Toast.makeText(this, "Storage permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
+
+

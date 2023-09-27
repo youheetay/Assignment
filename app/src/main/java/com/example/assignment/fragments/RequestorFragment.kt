@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.Food
@@ -49,7 +52,7 @@ class RequestorFragment : Fragment() {
 
         foodReqArrayList = arrayListOf()
 
-        homeReqRecyclerAdapter = HomeReqRecyclerAdapter(foodReqArrayList)
+        homeReqRecyclerAdapter = HomeReqRecyclerAdapter(requireContext(),foodReqArrayList)
 
         recyclerViewReq.adapter = homeReqRecyclerAdapter
 
@@ -57,6 +60,7 @@ class RequestorFragment : Fragment() {
 
         return rootView
     }
+
 
     private fun EventChangeListener(){
 

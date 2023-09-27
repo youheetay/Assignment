@@ -6,10 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.Food
 import com.example.assignment.HomeRecyclerAdapter
+import com.example.assignment.HomeRecyclerAdapter2
 import com.example.assignment.R
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
@@ -21,7 +23,7 @@ class DonorFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var foodArrayList: ArrayList<Food>
-    private lateinit var homeRecyclerAdapter: HomeRecyclerAdapter
+    private lateinit var homeRecyclerAdapter2: HomeRecyclerAdapter2
     private lateinit var db: FirebaseFirestore
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,16 +32,15 @@ class DonorFragment : Fragment() {
         // Inflate the layout for this fragment
         val rootView =  inflater.inflate(R.layout.fragment_donor, container, false)
 
-
         recyclerView = rootView.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
 
         foodArrayList = arrayListOf()
 
-        homeRecyclerAdapter = HomeRecyclerAdapter(foodArrayList)
+        homeRecyclerAdapter2 = HomeRecyclerAdapter2(requireContext(),foodArrayList,requireContext())
 
-        recyclerView.adapter = homeRecyclerAdapter
+        recyclerView.adapter = homeRecyclerAdapter2
 
         EventChangeListener()
 
@@ -62,7 +63,7 @@ class DonorFragment : Fragment() {
                     }
                 }
 
-                homeRecyclerAdapter.notifyDataSetChanged()
+                homeRecyclerAdapter2.notifyDataSetChanged()
             }
         })
 

@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.Toast
 import com.example.assignment.databinding.ActivityLoginBinding
 import com.example.assignment.databinding.ActivityProfileBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -34,6 +35,7 @@ class ProfileActivity : AppCompatActivity() {
         uid = auth.currentUser?.uid.toString()
         historyBtn = findViewById(R.id.historyBtn)
 
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.buttonNavigationView)
 
         if (uid.isNotEmpty()) {
             getUserData()
@@ -42,6 +44,31 @@ class ProfileActivity : AppCompatActivity() {
         binding.historyBtn.setOnClickListener{
             val historyIntent = Intent(this, HistoryViewActivity::class.java)
             startActivity(historyIntent)
+        }
+
+        // Set up a listener for item clicks
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.home -> {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    true // Return true to indicate that the item click is handled
+                }
+
+                R.id.cart -> {
+                    val intent = Intent(this, CartActivity::class.java)
+                    startActivity(intent)
+                    true // Return true to indicate that the item click is handled
+                }
+
+                R.id.profile -> {
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    startActivity(intent)
+                    true // Return true to indicate that the item click is handled
+                }
+
+                else -> false // Return false for items that are not handled
+            }
         }
     }
 

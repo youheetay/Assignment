@@ -1,7 +1,11 @@
 package com.example.assignment
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +13,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.assignment.fragments.DonorFoodUpdateFragment
+import com.example.assignment.fragments.UpdateDonorScreenFragment
 import com.google.firebase.firestore.FirebaseFirestore
 
-class HistoryAdapter (private val foodList: ArrayList<Food> ):
-    RecyclerView.Adapter<HistoryAdapter.ViewHolderHistory>() {
+class HistoryAdapter (private val context: Context, private val foodList: ArrayList<Food>, private val fragmentManager: FragmentManager): RecyclerView.Adapter<HistoryAdapter.ViewHolderHistory>() {
 
-    private lateinit var imageView: ImageView
+    companion object {
+        const val ARG_FOOD = "food"
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryAdapter.ViewHolderHistory {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item,parent,false)
@@ -29,7 +39,27 @@ class HistoryAdapter (private val foodList: ArrayList<Food> ):
 
         holder.editImage.setOnClickListener{
 
+            // Handle edit button click here
+            // You can open an edit dialog/fragment here
+            val foodEdit = foodList[position]
+
+            // Create a new instance of the DonorFoodUpdateFragment
+            val editDialogFragment = DonorFoodUpdateFragment()
+
+            // Pass the notification data to the fragment
+            val args = Bundle()
+            args.putParcelable(ARG_FOOD, foodEdit)
+            editDialogFragment.arguments = args
+
+            val fragmentManager = (context as AppCompatActivity).supportFragmentManager
+            fragmentManager.beginTransaction()
+                .replace(R.id.admin_fl_wrapper, editDialogFragment)
+                .addToBackStack(null)
+                .commit()
+
         }
+
+
         holder.deleteImage.setOnClickListener{
             val positionDelete = holder.adapterPosition
             val deleteFood = foodList[positionDelete]
@@ -59,7 +89,7 @@ class HistoryAdapter (private val foodList: ArrayList<Food> ):
                         }
                         .addOnFailureListener { exception ->
                             Log.e(TAG, "Error deleting Food from Firestore: $exception")
-                            Toast.makeText(holder.itemView.context, "You have deleted successfully", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(holder.itemView.context, "Not Delete Succesful", Toast.LENGTH_SHORT).show()
                         }
                 }
             }
@@ -81,6 +111,6 @@ class HistoryAdapter (private val foodList: ArrayList<Food> ):
         val editImage: ImageView = itemView.findViewById(R.id.editBtn)
         val deleteImage: ImageView = itemView.findViewById(R.id.deleteBtn)
         val documentId: String? = null
-
     }
+
 }

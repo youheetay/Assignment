@@ -1,12 +1,18 @@
 package com.example.assignment
 
-import android.media.Image
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Activity
+import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.assignment.fragments.DonorFoodUpdateFragment
+import com.example.assignment.fragments.UpdateDonorScreenFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
@@ -16,68 +22,16 @@ import com.google.firebase.firestore.QuerySnapshot
 
 class HistoryActivity : AppCompatActivity() {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var foodArrayList: ArrayList<Food>
-    private lateinit var historyAdapter: HistoryAdapter
-    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
 
-        recyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.setHasFixedSize(true)
-
-        foodArrayList = arrayListOf()
-
-        historyAdapter = HistoryAdapter(foodArrayList)
-
-        recyclerView.adapter = historyAdapter
-
-        // Pass the user ID to the EventChangeListener function here
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser != null) {
-            val userId = currentUser.uid
-            EventChangeListener(userId)
-        }
+        makeCurrentFragment(UpdateDonorScreenFragment())
     }
 
-    private fun EventChangeListener(userId: String){
-
-            db = FirebaseFirestore.getInstance()
-            db.collection("food").whereEqualTo("userId", userId) // Filter by user ID
-                .addSnapshotListener(object : EventListener<QuerySnapshot> {
-            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                if (error!= null) {
-                    Log.e("Firestore Error", error.message.toString())
-                    return
-                }
-
-                // Clear the existing list to avoid duplicates
-                foodArrayList.clear()
-
-                // Iterate through the documents and add matching items to the list
-                for (document in value!!.documents) {
-                    val foodData = document.toObject(Food::class.java)
-                    if (foodData != null) {
-                        // Get the document ID
-                        val foodId = document.id
-
-                        // Add the document ID along with other data to the list
-                        foodData.id = foodId
-                        foodArrayList.add(foodData)
-                    }
-                }
-
-                historyAdapter.notifyDataSetChanged()
-            }
-        })
-
+    private fun makeCurrentFragment(fragment: Fragment) = supportFragmentManager.beginTransaction().apply {
+        replace(R.id.admin_fl_wrapper, fragment)
+        commit()
     }
-
-    private fun updateFood(upatedFood: Food){
-
-    }
-
 }

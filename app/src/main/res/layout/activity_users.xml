@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="140dp"
+        android:backgroundTint="#E81A1A"
         android:text="Requester" />
 
     <!-- Add some spacing between the buttons -->
@@ -36,14 +37,11 @@
         android:layout_gravity="center_horizontal"
         android:text="Donor" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="16dp" />
-
     <Button
         android:id="@+id/homeBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Home" />
+        android:text="Button" />
+
 
 </LinearLayout>

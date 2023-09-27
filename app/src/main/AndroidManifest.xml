@@ -13,6 +13,18 @@
         android:theme="@style/Theme.Assignment"
         tools:targetApi="31">
         <activity
+            android:name=".HistoryViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".fragments.ReqHistoryFragment"
+            android:exported="false" />
+        <activity
+            android:name=".ReqHistoryAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".ReqHistoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProfileSetup"
             android:exported="false" />
         <activity
@@ -65,9 +77,9 @@
         <activity
             android:name=".HistoryActivity"
             android:exported="false" />
-
-        <activity android:name=".ProfileSetup1"
-            android:exported="false"/>
+        <activity
+            android:name=".ProfileSetup1"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -11,26 +11,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/tab_layout_Home">
+        android:id="@+id/tab_layout_HistoryView">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home Requestor" />
+            android:text="Requestor " />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home Donor" />
+            android:text="Donor" />
 
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/view_pager2"
+        android:id="@+id/historyView_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="50dp" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

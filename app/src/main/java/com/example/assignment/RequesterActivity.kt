@@ -77,7 +77,7 @@ class RequesterActivity : AppCompatActivity() {
                 )
 
                 // Reference a new document with a generated ID
-                db.collection("foodR").add(requestMap)
+                db.collection("foodPendingReq").add(requestMap)
                     .addOnSuccessListener {
                         Toast.makeText(this, "Successfully Request Food!", Toast.LENGTH_SHORT).show()
                         // Finish the current activity to go back to the previous page

@@ -40,33 +40,35 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         binding.historyBtn.setOnClickListener{
-            val historyIntent = Intent(this, HistoryActivity::class.java)
+            val historyIntent = Intent(this, HistoryViewActivity::class.java)
             startActivity(historyIntent)
         }
     }
 
     private fun getUserData() {
         db = FirebaseFirestore.getInstance()
-        db.collection("user").document(uid).get()
-            .addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    val user = documentSnapshot.toObject(User::class.java)
-                    if (user != null) {
-                        binding.userId.text = user.userId
-                        binding.userName.text = user.userName
-                        binding.gender.text = user.gender
-                        binding.dob.text = user.DOB
-                        binding.address.text = user.address
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            val userId = currentUser.uid
+            db.collection("user").document(userId).get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val user = document.toObject(User::class.java)
+                        if (user != null) {
+                            binding.userId.text = user.userId
+                            binding.userName.text = user.userName
+                            binding.gender.text = user.gender
+                            binding.dob.text = user.DOB
+                            binding.address.text = user.address
+                        }
+                    } else {
+                        Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show()
                     }
-                } else {
-                    Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show()
-
                 }
-
-            }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error getting user data: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
+}
 }

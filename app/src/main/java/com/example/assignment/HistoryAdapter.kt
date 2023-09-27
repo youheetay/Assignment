@@ -12,7 +12,8 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 
-class HistoryAdapter (private val foodList: ArrayList<Food>): RecyclerView.Adapter<HistoryAdapter.ViewHolderHistory>() {
+class HistoryAdapter (private val foodList: ArrayList<Food> ):
+    RecyclerView.Adapter<HistoryAdapter.ViewHolderHistory>() {
 
     private lateinit var imageView: ImageView
 

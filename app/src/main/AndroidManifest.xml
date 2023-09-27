@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Assignment"
         tools:targetApi="31">
         <activity
+            android:name=".ProfileSetup"
+            android:exported="false" />
+        <activity
             android:name=".UserActivity"
             android:exported="false" />
         <activity
@@ -50,17 +53,21 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".UserActivity"-->
-<!--            android:exported="true"/>-->
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".UserActivity" -->
+        <!-- android:exported="true"/> -->
         <activity
             android:name=".DonarActivity"
             android:exported="true" />
         <activity
             android:name=".RequesterActivity"
             android:exported="true" />
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="false" />
 
+        <activity android:name=".ProfileSetup1"
+            android:exported="false"/>
     </application>
 
 </manifest>

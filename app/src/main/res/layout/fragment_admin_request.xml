@@ -7,14 +7,37 @@
     android:layout_height="match_parent"
     tools:context=".fragments.AdminRequestFragment">
 
+    <Button
+        android:id="@+id/pendingButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:text="Pending Approval" />
+
     <TextView
+        android:id="@+id/notificationCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Admin Request"
-        android:textSize="32dp" />
+        android:layout_gravity="center|top"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="28dp"
+        android:padding="15dp"
+        android:textSize="18sp" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ReqrecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/list_item">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/CreateButton"

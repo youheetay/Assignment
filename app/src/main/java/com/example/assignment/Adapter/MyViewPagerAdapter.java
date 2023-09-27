@@ -1,4 +1,4 @@
-package com.example.assignment;
+package com.example.assignment.Adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,6 +17,7 @@ public class MyViewPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
+
         switch(position){
             case 0:
                 return new AdminRequestFragment();
@@ -31,4 +32,5 @@ public class MyViewPagerAdapter extends FragmentStateAdapter {
     public int getItemCount() {
         return 2;
     }
+
 }

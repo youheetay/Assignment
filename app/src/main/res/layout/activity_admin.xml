@@ -7,24 +7,25 @@
     tools:context=".AdminActivity">
 
     <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/tab_layout">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Requestor" />
+            android:text="Admin Requestor" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Donor" />
+            android:text="Admin Donor" />
 
     </com.google.android.material.tabs.TabLayout>
+
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"

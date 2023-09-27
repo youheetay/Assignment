@@ -13,6 +13,20 @@
         android:theme="@style/Theme.Assignment"
         tools:targetApi="31">
         <activity
+            android:name=".emptyActivityDonor"
+            android:exported="false" />
+        <activity
+            android:name=".emptyActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".emptyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EmptyActivity"
+            android:exported="false"
+            android:label="@string/title_activity_empty"
+            android:theme="@style/Theme.Assignment" />
+        <activity
             android:name=".AdminAddReq"
             android:exported="false" />
         <activity

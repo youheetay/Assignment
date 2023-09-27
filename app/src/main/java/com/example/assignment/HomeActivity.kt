@@ -3,7 +3,7 @@ package com.example.assignment
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
-import com.example.assignment.R.id.tab_layout_Home
+import com.example.assignment.Adapter.HomeViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
 
 class HomeActivity : AppCompatActivity() {
@@ -17,7 +17,8 @@ class HomeActivity : AppCompatActivity() {
 
         tabLayout1 = findViewById(R.id.tab_layout_Home)
         viewPagerHome = findViewById(R.id.view_pager2)
-        homeViewPagerAdapter =  HomeViewPagerAdapter(this)
+        homeViewPagerAdapter =
+            HomeViewPagerAdapter(this)
         viewPagerHome.setAdapter(homeViewPagerAdapter)
 
         //tabLayout.setupWithViewPager(viewPager2)

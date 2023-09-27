@@ -2,10 +2,9 @@ package com.example.assignment
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Layout
 import androidx.viewpager2.widget.ViewPager2
+import com.example.assignment.Adapter.MyViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 
 class AdminActivity : AppCompatActivity() {
@@ -20,7 +19,8 @@ private lateinit var myViewPagerAdapter : MyViewPagerAdapter
 
         tabLayout = findViewById(R.id.tab_layout)
         viewPager2 = findViewById(R.id.view_pager)
-        myViewPagerAdapter =  MyViewPagerAdapter(this)
+        myViewPagerAdapter =
+            MyViewPagerAdapter(this)
         viewPager2.setAdapter(myViewPagerAdapter)
 
         //tabLayout.setupWithViewPager(viewPager2)

@@ -2,6 +2,8 @@ package com.example.assignment
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageButton
+import androidx.appcompat.app.AlertDialog
 import androidx.viewpager2.widget.ViewPager2
 import com.example.assignment.Adapter.MyViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
@@ -24,6 +26,12 @@ private lateinit var myViewPagerAdapter : MyViewPagerAdapter
         viewPager2.setAdapter(myViewPagerAdapter)
 
         //tabLayout.setupWithViewPager(viewPager2)
+        val imageBtn : ImageButton = findViewById(R.id.imageButton)
+
+        imageBtn.setOnClickListener {
+            showSignOutConfirmationDialog()
+        }
+
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
 
@@ -46,5 +54,26 @@ private lateinit var myViewPagerAdapter : MyViewPagerAdapter
                 tabLayout.getTabAt(position)?.select()
             }
         })
+    }
+
+    private fun showSignOutConfirmationDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Sign Out Confirmation")
+        alertDialogBuilder.setMessage("Are you sure you want to sign out?")
+
+        // Set up the positive button and its click listener
+        alertDialogBuilder.setPositiveButton("Yes") { dialog, _ ->
+            finish() // Close the current activity
+        }
+
+        // Set up the negative button and its click listener
+        alertDialogBuilder.setNegativeButton("No") { dialog, _ ->
+            // User clicked No, dismiss the dialog
+            dialog.dismiss()
+        }
+
+        // Create and show the AlertDialog
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 }

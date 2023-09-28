@@ -14,10 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.Food
 import com.example.assignment.FoodR
-import com.example.assignment.HistoryAdapter
-import com.example.assignment.HomeReqRecyclerAdapter
 import com.example.assignment.R
-import com.example.assignment.ReqHistoryAdapter
+import com.example.assignment.Adapter.ReqHistoryAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore

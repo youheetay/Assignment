@@ -1,4 +1,4 @@
-package com.example.assignment
+package com.example.assignment.Adapter
 
 import android.app.AlertDialog
 import android.content.ContentValues
@@ -12,36 +12,31 @@ import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-//import com.google.firebase.database.DatabaseError
-//import com.google.firebase.database.DatabaseReference
-//import com.google.firebase.database.FirebaseDatabase
+import com.example.assignment.FoodR
+import com.example.assignment.R
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.google.protobuf.Value
 
+class HomeReqRecyclerAdapter(private val context: Context, private var foodReqList: ArrayList<FoodR>, private val parentContext: Context):
+    RecyclerView.Adapter<HomeReqRecyclerAdapter.MyViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup,
+                                    viewType: Int): MyViewHolder {
 
-class HomeRecyclerAdapter2 (private val context: Context, private val foodList: ArrayList<Food>, private val parentContext: Context ): RecyclerView.Adapter<HomeRecyclerAdapter2.MyViewHolder>() {
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): HomeRecyclerAdapter2.MyViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.reqlist_item,parent,false)
 
-        val itemView =
-            LayoutInflater.from(parent.context).inflate(R.layout.list_item2, parent, false)
         return MyViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: HomeRecyclerAdapter2.MyViewHolder, position: Int) {
-        val food: Food = foodList[position]
-        holder.foodName.text = food.foodName
-        holder.foodDes.text = food.foodDes
-        holder.quantity.text = food.quantity.toString()
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val foodR: FoodR = foodReqList[position]
+        holder.foodNameReq.text = foodR.foodNameR
+        holder.foodDesReq.text = foodR.foodDesR
+        holder.quantity.text = foodR.quantity.toString()
 
         Glide.with(holder.itemView.context)
-            .load(food.image) // Use the image URL from the Food object
+            .load(foodR.image) // Use the image URL from the FoodR object
             .into(holder.foodImage)
 
         holder.donateBtn.setOnClickListener {
@@ -49,26 +44,31 @@ class HomeRecyclerAdapter2 (private val context: Context, private val foodList: 
         }
     }
 
-    override fun getItemCount(): Int {
-        return foodList.size
+    fun setFilteredList(foodReqList: ArrayList<FoodR>){
+        this.foodReqList = foodReqList
+        notifyDataSetChanged()
     }
 
-    public class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val foodName: TextView = itemView.findViewById(R.id.tvFoodName)
-        val foodDes: TextView = itemView.findViewById(R.id.tvFoodDes)
+    override fun getItemCount(): Int {
+        return foodReqList.size
+    }
+
+    public class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        val foodNameReq : TextView = itemView.findViewById(R.id.tvFoodNameR)
+        val foodDesReq : TextView = itemView.findViewById(R.id.tvFoodDesR)
+        val quantity : TextView = itemView.findViewById(R.id.selectQuantity)
         val foodImage: ImageView = itemView.findViewById(R.id.foodImage)
         val donateBtn: ImageView = itemView.findViewById(R.id.donateBtn)
-        val quantity: TextView = itemView.findViewById(R.id.selectQuantity)
-
     }
 
-    public fun showConfirmationDialog(itemPosition: Int) {
+    private fun showConfirmationDialog(itemPosition: Int) {
         val builder = AlertDialog.Builder(context)
 
         val inflater = LayoutInflater.from(context)
-        val dialogView = inflater.inflate(R.layout.activity_quantity_dialog, null)
+        val dialogView =
+            inflater.inflate(R.layout.donate_dialog, null) // Create a custom dialog layout
 
-        val quantityPicker = dialogView.findViewById<NumberPicker>(R.id.selectQuantity)
+        val quantityPicker = dialogView.findViewById<NumberPicker>(R.id.numberPicker)
         quantityPicker.maxValue = 60
         quantityPicker.minValue = 1
 
@@ -76,49 +76,53 @@ class HomeRecyclerAdapter2 (private val context: Context, private val foodList: 
             .setTitle("Select Quantity To Donate")
             .setPositiveButton("Donate") { dialogInterface: DialogInterface, _: Int ->
                 val selectedQuantity = quantityPicker.value
-                val food = foodList[itemPosition]
+                val food = foodReqList[itemPosition]
                 val oldQuantity = food.quantity ?: 0
                 val newQuantity = oldQuantity - selectedQuantity
 
-                // Inside your showConfirmationDialog function, after making local changes:
-                if (newQuantity >= 0) {
-                    // Update the quantity in the data source (foodList)
-                    foodList[itemPosition].quantity = newQuantity
+                if (selectedQuantity <= oldQuantity) {
+                    // Inside your showConfirmationDialog function, after making local changes:
+                    if (newQuantity >= 0) {
+                        // Update the quantity in the data source (foodList)
+                        foodReqList[itemPosition].quantity = newQuantity
 
-                    // Update the Firebase Firestore document with the new quantity
-                    val db = FirebaseFirestore.getInstance()
+                        // Update the Firebase Firestore document with the new quantity
+                        val db = FirebaseFirestore.getInstance()
 
-                    // Get the document ID from the food object
-                    val foodDocumentId = food.id.toString()
+                        // Get the document ID from the food object
+                        val foodDocumentId = food.id.toString()
 
-                    // Create a map with the updated quantity
-                    val updatedData = hashMapOf(
-                        "quantity" to newQuantity
-                    )
+                        // Create a map with the updated quantity
+                        val updatedData = hashMapOf(
+                            "quantity" to newQuantity
+                        )
 
-                    // Update the document with the specified ID using set() with merge option
-                    db.collection("food").document(foodDocumentId)
-                        .set(updatedData, SetOptions.merge())
-                        .addOnSuccessListener {
-                            showSuccessDialog()
-                        }
-                        .addOnFailureListener { e ->
-                            showErrorDialog(e.message)
-                        }
+                        // Update the document with the specified ID using set() with merge option
+                        db.collection("foodR").document(foodDocumentId)
+                            .set(updatedData, SetOptions.merge())
+                            .addOnSuccessListener {
+                                showSuccessDialog()
+                            }
+                            .addOnFailureListener { e ->
+                                showErrorDialog(e.message)
+                            }
+                    }
                 } else {
                     // Handle the case where the new quantity is negative (optional)
+                    Toast.makeText(context, "Quantity Exceeded", Toast.LENGTH_SHORT).show()
                 }
+
                 // Check if newQuantity is 0 and delete the item
                 if (newQuantity == 0) {
                     val positionDelete = itemPosition
-                    val deleteFood = foodList[positionDelete]
+                    val deleteFood = foodReqList[positionDelete]
                     // Remove the notification from the list locally
-                    foodList.remove(deleteFood)
+                    foodReqList.remove(deleteFood)
                     notifyItemRemoved(positionDelete)
 
                     // Delete the notification from Firestore
                     val db = FirebaseFirestore.getInstance()
-                    val food = db.collection("food")
+                    val food = db.collection("foodR")
 
                     // Use the correct document ID to delete the specific notification in Firestore
                     val deleteFoodId = deleteFood.id // Assuming id is the correct document ID
@@ -143,6 +147,7 @@ class HomeRecyclerAdapter2 (private val context: Context, private val foodList: 
 
         val dialog: AlertDialog = builder.create()
         dialog.show()
+
     }
 
     private fun showSuccessDialog() {

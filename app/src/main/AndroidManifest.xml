@@ -39,7 +39,7 @@
             android:name=".resetPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeRecyclerAdapter2"
+            android:name=".Adapter.HomeRecyclerAdapter2"
             android:exported="false" />
 
         <activity

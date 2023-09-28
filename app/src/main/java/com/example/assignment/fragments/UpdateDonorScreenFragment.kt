@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.Food
-import com.example.assignment.HistoryAdapter
+import com.example.assignment.Adapter.HistoryAdapter
 import com.example.assignment.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.EventListener

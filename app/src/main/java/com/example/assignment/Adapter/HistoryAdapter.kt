@@ -1,9 +1,8 @@
-package com.example.assignment
+package com.example.assignment.Adapter
 
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.Uri
 import android.util.Log
@@ -22,7 +21,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.assignment.Food
+import com.example.assignment.R
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -46,7 +46,7 @@ class HistoryAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): HistoryAdapter.ViewHolderHistory {
+    ): ViewHolderHistory {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
         return ViewHolderHistory(itemView)
@@ -148,7 +148,7 @@ class HistoryAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: HistoryAdapter.ViewHolderHistory, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolderHistory, position: Int) {
         val food: Food = foodList[position]
         holder.foodName.text = food.foodName
         holder.foodDes.text = food.foodDes

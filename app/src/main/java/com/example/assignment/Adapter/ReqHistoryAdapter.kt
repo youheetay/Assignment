@@ -1,4 +1,4 @@
-package com.example.assignment
+package com.example.assignment.Adapter
 
 import android.app.AlertDialog
 import android.content.ContentValues
@@ -14,9 +14,10 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.assignment.FoodR
+import com.example.assignment.R
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -134,14 +135,14 @@ class ReqHistoryAdapter (private val reqFoodList: ArrayList<FoodR>,
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReqHistoryAdapter.ViewHolderHistory {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderHistory {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.reqlist_item2,parent,false)
         return ViewHolderHistory(itemView)
     }
 
 
 
-    override fun onBindViewHolder(holder: ReqHistoryAdapter.ViewHolderHistory, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolderHistory, position: Int) {
         val food : FoodR = reqFoodList[position]
         holder.foodNameR.text  = food.foodNameR
         holder.foodDesR.text = food.foodDesR

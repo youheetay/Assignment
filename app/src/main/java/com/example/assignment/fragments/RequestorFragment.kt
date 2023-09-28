@@ -11,9 +11,8 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.FoodR
-import com.example.assignment.HomeReqRecyclerAdapter
+import com.example.assignment.Adapter.HomeReqRecyclerAdapter
 import com.example.assignment.R
-import androidx.appcompat.widget.Toolbar
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore

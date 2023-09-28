@@ -13,7 +13,7 @@ class UserActivity : AppCompatActivity() {
         binding = ActivityUsersBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.donarButton.setOnClickListener{
+        binding.donorButton.setOnClickListener{
             val donarIntent = Intent(this, DonarActivity::class.java)
             startActivity(donarIntent)
         }
@@ -23,9 +23,8 @@ class UserActivity : AppCompatActivity() {
             startActivity(requesterIntent)
         }
 
-        binding.homeBtn.setOnClickListener{
-            val Intent = Intent(this,HomeActivity::class.java)
-            startActivity(Intent)
+        binding.backButton.setOnClickListener {
+            onBackPressed() // Call onBackPressed to navigate back
         }
     }
 }

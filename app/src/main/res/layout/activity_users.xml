@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context=".UserActivity">
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:padding="16dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/baseline_arrow_back_24" />
 
     <TextView
         android:id="@+id/user"
@@ -14,34 +24,43 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="100dp"
-        android:text="Do you want be a donar or a requester" />
+        android:text="Do you want to be a donor or a requester"
+        android:textColor="#333333"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+    <Button
+        android:id="@+id/donorButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTint="#009688"
+        android:text="Donor"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
 
     <Button
         android:id="@+id/requesterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="40dp"
         android:backgroundTint="#E81A1A"
-        android:text="Requester" />
-
-    <!-- Add some spacing between the buttons -->
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="16dp" />
-
-    <Button
-        android:id="@+id/donarButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Donor" />
-
-    <Button
-        android:id="@+id/homeBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="Requester"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
 
 
 </LinearLayout>

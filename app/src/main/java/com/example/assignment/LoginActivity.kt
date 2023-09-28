@@ -74,7 +74,8 @@ class LoginActivity : AppCompatActivity() {
                                 userDocRef.get()
                                     .addOnCompleteListener { documentSnapshot ->
                                         if (documentSnapshot.isSuccessful) {
-                                            val documentData = documentSnapshot.equals("userId") // Get all the fields in the document
+                                            val documentData =
+                                                documentSnapshot.equals("userId") // Get all the fields in the document
 //                                            val userProfile = documentSnapshot.result?.toObject(User::class.java)
 //                                            val firestoreUid = documentSnapshot.getString("userId")
 
@@ -85,15 +86,23 @@ class LoginActivity : AppCompatActivity() {
                                                 startActivity(intent)
                                             } else {
                                                 // User doesn't have a profile setup, redirect to ProfileSetup1
-                                                val intent = Intent(this, UserActivity::class.java)
+                                                val intent = Intent(this, HomeActivity::class.java)
                                                 startActivity(intent)
                                             }
                                         } else {
-                                            Toast.makeText(this, "Error fetching user profile", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(
+                                                this,
+                                                "Error fetching user profile",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         }
                                     }
                             } else {
-                                Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this,
+                                    "You Have Not Sign up!Please sign up",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                 }
@@ -103,7 +112,7 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
-        binding.signupRedirectText.setOnClickListener{
+        binding.signupRedirectText.setOnClickListener {
             val signupIntent = Intent(this, SignupActivity::class.java)
             startActivity(signupIntent)
         }

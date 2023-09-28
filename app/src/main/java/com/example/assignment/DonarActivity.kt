@@ -70,8 +70,8 @@ class DonarActivity : AppCompatActivity() {
                     true // Return true to indicate that the item click is handled
                 }
 
-                R.id.cart -> {
-                    val intent = Intent(this, CartActivity::class.java)
+                R.id.create -> {
+                    val intent = Intent(this, UserActivity::class.java)
                     startActivity(intent)
                     true // Return true to indicate that the item click is handled
                 }

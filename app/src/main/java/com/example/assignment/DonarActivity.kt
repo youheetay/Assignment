@@ -60,14 +60,14 @@ class DonarActivity : AppCompatActivity() {
         image = findViewById(R.id.imageView)
         quantityDonar = findViewById(R.id.quantityDonar)
 
-        val quantity : NumberPicker = findViewById(R.id.selectQuantity)
+        val quantity: NumberPicker = findViewById(R.id.selectQuantity)
         quantity.maxValue = 60
         quantity.minValue = 1
         quantity.wrapSelectorWheel = true
-        quantity.setOnValueChangedListener {
-                numberPicker,
-                oldValue,
-                newValue -> quantityDonar.text = "Quantity : $newValue"
+        quantity.setOnValueChangedListener { numberPicker,
+                                             oldValue,
+                                             newValue ->
+            quantityDonar.text = "Quantity : $newValue"
         }
 
 
@@ -107,7 +107,8 @@ class DonarActivity : AppCompatActivity() {
 
                 if (uri != null) {
                     // Upload the image first
-                    val storageRef = storageRef.getReference("images").child(System.currentTimeMillis().toString())
+                    val storageRef = storageRef.getReference("images")
+                        .child(System.currentTimeMillis().toString())
                     storageRef.putFile(uri!!)
                         .addOnSuccessListener { task ->
                             task.metadata?.reference?.downloadUrl
@@ -124,13 +125,21 @@ class DonarActivity : AppCompatActivity() {
                                     )
 
                                     // Store the Food object in Firestore with the same document ID
-                                    db.collection("food").document(task.metadata?.name ?: "")
+                                    db.collection("foodPendingDonor").document(task.metadata?.name ?: "")
                                         .set(food)
                                         .addOnSuccessListener {
-                                            Toast.makeText(this, "Upload Successful", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(
+                                                this,
+                                                "Upload Successful",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         }
                                         .addOnFailureListener { error ->
-                                            Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(
+                                                this,
+                                                error.toString(),
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         }
                                 }
                         }
@@ -139,7 +148,8 @@ class DonarActivity : AppCompatActivity() {
                         }
                 } else {
                     // Handle the case where uri is not initialized (e.g., show an error message)
-                    Toast.makeText(this, "Please upload an image of food", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Please upload an image of food", Toast.LENGTH_SHORT)
+                        .show()
                 }
             } else {
                 // Handle the case where the user is not signed in
@@ -166,7 +176,7 @@ class DonarActivity : AppCompatActivity() {
             galleryImage.launch("image/*")
         }
 
-      // binding.uploadBtn.setOnClickListener {
+        // binding.uploadBtn.setOnClickListener {
 //            if (uri != null) {
 //                val userId = FirebaseAuth.getInstance().currentUser?.uid
 //                if (userId != null) {
@@ -208,7 +218,7 @@ class DonarActivity : AppCompatActivity() {
 //                // Handle the case where uri is not initialized (e.g., show an error message)
 //                Toast.makeText(this, "Please upload an image of food", Toast.LENGTH_SHORT).show()
 //            }
-   // }
+        // }
 
 
         image?.setImageResource(R.drawable.baseline_image_24)

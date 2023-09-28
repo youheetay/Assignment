@@ -36,7 +36,7 @@ class UpdateDonorScreenFragment : Fragment() {
 
         foodArrayList = arrayListOf()
 
-        historyAdapter = HistoryAdapter(requireContext(), foodArrayList, childFragmentManager)
+       // historyAdapter = HistoryAdapter(requireContext(), foodArrayList, childFragmentManager)
 
         recyclerView.adapter = historyAdapter
 

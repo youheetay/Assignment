@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,6 +31,8 @@ class HistoryViewActivity : AppCompatActivity() {
     private var uri: Uri? = null
     private var image: ImageView? = null
 
+    private lateinit var backButton: ImageButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history_view)
@@ -38,6 +41,8 @@ class HistoryViewActivity : AppCompatActivity() {
         viewPagerHome = findViewById(R.id.historyView_pager)
         historyViewPagerAdapter =  HistoryViewPagerAdapter(this)
         viewPagerHome.setAdapter(historyViewPagerAdapter)
+
+        backButton = findViewById(R.id.backButton)
 
         //tabLayout.setupWithViewPager(viewPager2)
 
@@ -62,6 +67,11 @@ class HistoryViewActivity : AppCompatActivity() {
                 tabLayout1.getTabAt(position)?.select()
             }
         })
+
+        backButton.setOnClickListener {
+            onBackPressed() // Call onBackPressed to navigate back
+        }
     }
+
 
 }

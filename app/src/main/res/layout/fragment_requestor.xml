@@ -5,6 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".fragments.RequestorFragment">
 
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar_layout"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-8dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewReq"
         android:layout_width="match_parent"

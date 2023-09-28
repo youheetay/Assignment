@@ -101,6 +101,9 @@
             android:name=".HistoryViewActivity"
             android:exported="false" />
 
+        <activity android:name=".ProfileSetup1"
+            android:exported="false"/>
+
 
     </application>
 

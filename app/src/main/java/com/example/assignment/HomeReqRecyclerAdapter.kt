@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
-class HomeReqRecyclerAdapter(private val context: Context, private val foodReqList: ArrayList<FoodR>,private val parentContext: Context):
+class HomeReqRecyclerAdapter(private val context: Context, private var foodReqList: ArrayList<FoodR>, private val parentContext: Context):
     RecyclerView.Adapter<HomeReqRecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): HomeReqRecyclerAdapter.MyViewHolder {
@@ -38,6 +38,11 @@ class HomeReqRecyclerAdapter(private val context: Context, private val foodReqLi
         holder.donateBtn.setOnClickListener {
             showConfirmationDialog(holder.adapterPosition) // Pass the item position to the dialog
         }
+    }
+
+    fun setFilteredList(foodReqList: ArrayList<FoodR>){
+        this.foodReqList = foodReqList
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

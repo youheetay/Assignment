@@ -13,11 +13,11 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.assignment.FoodReq
+import com.example.assignment.FoodR
 import com.example.assignment.R
 import com.google.firebase.firestore.FirebaseFirestore
 
-class AdminReqPendingAdapter (private val foodList: ArrayList<FoodReq>) :
+class AdminReqPendingAdapter (private val foodList: ArrayList<FoodR>) :
     RecyclerView.Adapter<AdminReqPendingAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdminReqPendingAdapter.MyViewHolder {
@@ -26,7 +26,7 @@ class AdminReqPendingAdapter (private val foodList: ArrayList<FoodReq>) :
     }
 
     override fun onBindViewHolder(holder: AdminReqPendingAdapter.MyViewHolder, position: Int) {
-        val food : FoodReq = foodList[position]
+        val food : FoodR = foodList[position]
         holder.foodNameR.text = food.foodNameR
         holder.foodDesR.text = food.foodDesR
 

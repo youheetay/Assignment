@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.Adapter.AdminReqAdapter
-import com.example.assignment.FoodReq
+import com.example.assignment.FoodR
 import com.example.assignment.R
 import com.example.assignment.emptyActivity
 import com.google.android.gms.tasks.Task
@@ -35,7 +35,7 @@ import com.google.firebase.firestore.QuerySnapshot
 class AdminRequestFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var foodArrayList: ArrayList<FoodReq>
+    private lateinit var foodArrayList: ArrayList<FoodR>
     private lateinit var AdminReqAdapter : AdminReqAdapter
     //private lateinit var db: FirebaseFirestore
     private val db = FirebaseFirestore.getInstance()
@@ -185,7 +185,7 @@ class AdminRequestFragment : Fragment() {
                 for(dc: DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
 
-                        val foodArray = dc.document.toObject(FoodReq::class.java)
+                        val foodArray = dc.document.toObject(FoodR::class.java)
                         if (foodArray != null){
                             // Get the document ID
                             val foodReqId = dc.document.id

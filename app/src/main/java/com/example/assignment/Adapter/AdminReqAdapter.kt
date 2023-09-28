@@ -14,25 +14,33 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.assignment.FoodReq
+import com.bumptech.glide.Glide
+import com.example.assignment.FoodR
 import com.example.assignment.R
 import com.google.firebase.firestore.FirebaseFirestore
 import java.lang.Integer.parseInt
 
-class AdminReqAdapter (private val foodList: ArrayList<FoodReq>) :
+class AdminReqAdapter (private val foodList: ArrayList<FoodR>) :
     RecyclerView.Adapter<AdminReqAdapter.MyViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdminReqAdapter.MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item,parent,false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_admin,parent,false)
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: AdminReqAdapter.MyViewHolder, position: Int) {
-        val food : FoodReq = foodList[position]
+        val food : FoodR = foodList[position]
         holder.foodNameR.text = food.foodNameR
         holder.foodDesR.text = food.foodDesR
         holder.foodQty.text = food.quantity.toString()
+        Glide.with(holder.itemView.context)
+            .load(food.image) // Use the image URL from the Food object
+            .into(holder.foodImage)
+
+//        Glide.with(holder.itemView.context)
+//            .load(food.image) // Use the image URL from the Food object
+//            .into(holder.foodImage)
 
 
         holder.editBtn.setOnClickListener{
@@ -145,8 +153,36 @@ class AdminReqAdapter (private val foodList: ArrayList<FoodReq>) :
         val foodNameR : TextView = itemView.findViewById(R.id.tvFoodName)
         val foodDesR : TextView = itemView.findViewById(R.id.tvFoodDes)
         val foodQty : TextView = itemView.findViewById(R.id.tvFoodQty)
+        val foodImage: ImageView = itemView.findViewById(R.id.foodImage)
         val editBtn : Button = itemView.findViewById(R.id.editButton)
         val deleteBtn : Button = itemView.findViewById(R.id.deleteButton)
     }
+
+//    private fun showSuccessDialog() {
+//        val successDialog = AlertDialog.Builder(parentContext)
+//            .setTitle("Success")
+//            .setMessage("Donate successfully.")
+//            .setPositiveButton("OK") { dialog, _ ->
+//                dialog.dismiss()
+//                // Navigate back to your notification list fragment
+//                // You can use fragmentManager.popBackStack() or other navigation methods
+//            }
+//            .create()
+//
+//        successDialog.show()
+//    }
+//    private fun showErrorDialog(errorMessage: String?) {
+//        val errorDialog = AlertDialog.Builder(parentContext)
+//            .setTitle("Error")
+//            .setMessage("Failed to Donate: $errorMessage")
+//            .setPositiveButton("OK") { dialog, _ ->
+//                dialog.dismiss()
+//            }
+//            .create()
+//
+//        errorDialog.show()
+//    }
+
+
 }
 

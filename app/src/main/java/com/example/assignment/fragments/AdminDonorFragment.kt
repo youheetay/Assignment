@@ -1,8 +1,10 @@
 package com.example.assignment.fragments
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,13 +12,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.assignment.Adapter.AdminDonorAdapter
 import com.example.assignment.Food
 import com.example.assignment.R
@@ -30,6 +39,8 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 
 class AdminDonorFragment : Fragment() {
 
@@ -39,6 +50,126 @@ class AdminDonorFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private lateinit var textView: TextView
     private var totalCount : Int = 0
+    private var storageRef = Firebase.storage
+    private var uri: Uri? = null // Initialize with null
+    private var image: ImageView? = null // Initialize with null
+
+    private val STORAGE_PERMISSION_CODE = 101 // Request code for storage permission
+
+    private val galleryImage = registerForActivityResult(
+        ActivityResultContracts.GetContent(),
+        ActivityResultCallback { result: Uri? ->
+            result?.let {
+                uri = it
+
+                image?.setImageURI(result)
+            }
+        })
+
+    private val galleryImageAdapt = registerForActivityResult(
+        ActivityResultContracts.GetContent(),
+        ActivityResultCallback { result: Uri? ->
+            result?.let {
+                uri = it
+
+                AdminDonorAdapter.updateImageUri(result)
+            }
+        })
+
+
+    private fun addInfo() {
+        val inflater = LayoutInflater.from(requireContext())
+        val v = inflater.inflate(R.layout.admin_add_donor_card, null)
+
+        val addDialog = AlertDialog.Builder(requireContext())
+            .setView(v)
+            .create()
+
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        image = v.findViewById(R.id.imageView)
+        val textView2 = v.findViewById<TextView>(R.id.textView2)
+        var quantity: NumberPicker = v.findViewById(R.id.foodNumDonor)
+        quantity.maxValue = 60
+        quantity.minValue = 1
+        quantity.wrapSelectorWheel = true
+        quantity.setOnValueChangedListener { _, _, newValue ->
+            textView2.text = "Quantity : $newValue"
+        }
+
+        addDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok") { dialog, _ ->
+            val foodName = v.findViewById<EditText>(R.id.foodNameDonor).text.toString()
+            val foodDes = v.findViewById<EditText>(R.id.foodDesDonor).text.toString()
+            val selectedImageUri = uri // Get the selected image URI
+
+            if (currentUser != null) {
+                val userId = currentUser.uid
+
+                if (selectedImageUri != null) {
+
+                    // Upload the selected image to Firebase Storage
+                    val storageRef = storageRef.getReference("images").child(System.currentTimeMillis().toString())
+                    storageRef.putFile(selectedImageUri)
+                        .addOnSuccessListener { task ->
+                            task.metadata?.reference?.downloadUrl
+                                ?.addOnSuccessListener { downloadUri ->
+                                    // Create a new Food object with the downloaded image URL
+                                    val food = Food(
+                                        id = task.metadata?.name,
+                                        foodName = foodName,
+                                        foodDes = foodDes,
+                                        userId = userId,
+                                        image = downloadUri.toString(),
+                                        quantity = quantity.value
+                                    )
+
+                                    // Store the Food object in Firestore
+                                    db.collection("food").document(task.metadata?.name ?: "")
+                                        .set(food)
+                                        .addOnSuccessListener {
+                                            Toast.makeText(requireContext(), "Upload Successful", Toast.LENGTH_SHORT).show()
+                                        }
+                                        .addOnFailureListener { error ->
+                                            Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
+                                        }
+                                }
+                        }
+                        .addOnFailureListener { error ->
+                            Toast.makeText(requireContext(), "Upload failed: $error", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    // Handle the case where no image was selected
+                    Toast.makeText(requireContext(), "Please upload an image of food", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                // Handle the case where the user is not signed in
+                Toast.makeText(requireContext(), "User not signed in", Toast.LENGTH_SHORT).show()
+            }
+
+            dialog.dismiss()
+        }
+
+        addDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        v.findViewById<Button>(R.id.browseBtn).setOnClickListener {
+            // Launch the image picker after requesting permission
+            galleryImage.launch("image/*")
+        }
+        image?.setImageResource(R.drawable.baseline_image_24)
+
+        // Resize the ImageView
+        val newWidthInPixels = 300 // Adjust this value as needed
+        val newHeightInPixels = 300 // Adjust this value as needed
+        val layoutParams = image?.layoutParams
+        layoutParams?.width = newWidthInPixels
+        layoutParams?.height = newHeightInPixels
+        image?.layoutParams = layoutParams
+
+
+        addDialog.show()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,11 +182,12 @@ class AdminDonorFragment : Fragment() {
 
         foodArrayList = arrayListOf()
 
-        AdminDonorAdapter = AdminDonorAdapter(foodArrayList)
+        AdminDonorAdapter = AdminDonorAdapter(foodArrayList,galleryImageAdapt)
 
         recyclerView.adapter = AdminDonorAdapter
 
         textView = rootView.findViewById(R.id.notificationCount)
+
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -97,72 +229,6 @@ class AdminDonorFragment : Fragment() {
 
 
         return rootView
-    }
-
-    private fun addInfo(){
-
-        val inflater = LayoutInflater.from(requireContext())
-        val v = inflater.inflate(R.layout.admin_add_donor_card,null)
-
-        val addDialog = AlertDialog.Builder(requireContext())
-        addDialog.setView(v)
-
-        val currentUser = FirebaseAuth.getInstance().currentUser
-
-        val textView2 = v.findViewById<TextView>(R.id.textView2)
-        var quantity : NumberPicker = v.findViewById(R.id.foodNumDonor)
-        quantity.maxValue = 60
-        quantity.minValue = 1
-        quantity.wrapSelectorWheel = true
-        quantity.setOnValueChangedListener { numberPicker, oldValue, newValue -> textView2.text = "Quantity : $newValue"
-        }
-        addDialog.setPositiveButton("Ok") { dialog, which ->
-
-            val foodName = v.findViewById<EditText>(R.id.foodNameDonor).text.toString()
-            val foodDes = v.findViewById<EditText>(R.id.foodDesDonor).text.toString()
-            var quantity = quantity.value
-
-            if (currentUser != null) {
-                val userId = currentUser.uid
-
-                val data = hashMapOf(
-                    "foodName" to foodName,
-                    "foodDes" to foodDes,
-                    "quantity" to quantity,
-                    "userId" to userId
-                )
-
-                // Add the data to Firestore
-                db.collection("food").add(data)
-                    .addOnSuccessListener {
-                        Toast.makeText(requireContext(), "Create Success", Toast.LENGTH_SHORT)
-                            .show()
-                        dialog.dismiss()
-                    }
-                    .addOnFailureListener { e ->
-                        // Handle failure and log the error message
-                        Log.e(ContentValues.TAG, "Error adding data: ${e.message}", e)
-                        Toast.makeText(
-                            requireContext(),
-                            "Error adding data: ${e.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-            }else{
-                // Handle the case where the user is not signed in
-                Toast.makeText(requireContext(), "User not signed in", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-
-        addDialog.setNegativeButton("Cancel"){
-                dialog, which ->
-            dialog.dismiss()
-            //Toast.makeText(requireContext(), "", Toast.LENGTH_SHORT).show()
-        }
-
-        addDialog.create()
-        addDialog.show()
     }
 
     private fun EventChangeListener(userId: String){
@@ -221,4 +287,48 @@ class AdminDonorFragment : Fragment() {
 
     }
 
+    private fun requestStoragePermission() {
+        // Check if permission is already granted
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission hasn't been granted, request it
+            ActivityCompat.requestPermissions(
+                requireContext() as Activity,
+                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                STORAGE_PERMISSION_CODE
+            )
+        }
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission hasn't been granted, request it
+            ActivityCompat.requestPermissions(
+                requireContext() as Activity,
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                STORAGE_PERMISSION_CODE
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, you can now proceed with uploading the image
+                // Call the method or code to upload the image here
+            } else {
+                // Permission denied, show a message to the user or handle it accordingly
+                Toast.makeText(requireContext(), "Storage permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }

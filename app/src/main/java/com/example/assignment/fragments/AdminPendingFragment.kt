@@ -15,7 +15,7 @@ import com.example.assignment.Adapter.AdminReqAdapter
 import com.example.assignment.Adapter.AdminReqPendingAdapter
 import com.example.assignment.AdminActivity
 import com.example.assignment.Food
-import com.example.assignment.FoodReq
+import com.example.assignment.FoodR
 import com.example.assignment.R
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -30,7 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot
 class AdminPendingFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var foodArrayList: ArrayList<FoodReq>
+    private lateinit var foodArrayList: ArrayList<FoodR>
     private lateinit var AdminReqPendingAdapter : AdminReqPendingAdapter
     private val db = FirebaseFirestore.getInstance()
     private var totalCount : Int = 0
@@ -85,7 +85,7 @@ class AdminPendingFragment : Fragment() {
                 for(dc: DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
 
-                        val foodArray = dc.document.toObject(FoodReq::class.java)
+                        val foodArray = dc.document.toObject(FoodR::class.java)
                         if (foodArray != null){
                             // Get the document ID
                             val foodReqId = dc.document.id

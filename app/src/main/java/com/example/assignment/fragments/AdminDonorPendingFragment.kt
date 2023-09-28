@@ -15,7 +15,7 @@ import com.example.assignment.Adapter.AdminDonorPendingAdapter
 import com.example.assignment.Adapter.AdminReqPendingAdapter
 import com.example.assignment.AdminActivity
 import com.example.assignment.Food
-import com.example.assignment.FoodReq
+import com.example.assignment.FoodR
 import com.example.assignment.R
 import com.example.assignment.emptyActivity
 import com.google.android.gms.tasks.Task

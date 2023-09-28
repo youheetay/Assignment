@@ -6,14 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.assignment.Food
 import com.example.assignment.FoodR
-import com.example.assignment.HomeRecyclerAdapter
 import com.example.assignment.HomeReqRecyclerAdapter
 import com.example.assignment.R
 import com.google.firebase.firestore.DocumentChange
@@ -22,16 +17,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [RequestorFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RequestorFragment : Fragment() {
 
     private lateinit var recyclerViewReq: RecyclerView
@@ -52,7 +37,7 @@ class RequestorFragment : Fragment() {
 
         foodReqArrayList = arrayListOf()
 
-        homeReqRecyclerAdapter = HomeReqRecyclerAdapter(requireContext(),foodReqArrayList)
+        homeReqRecyclerAdapter = HomeReqRecyclerAdapter(requireContext(),foodReqArrayList,requireContext())
 
         recyclerViewReq.adapter = homeReqRecyclerAdapter
 

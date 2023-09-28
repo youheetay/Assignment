@@ -9,11 +9,10 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="28dp"
         android:text="Request Form"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,93 +20,90 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="48dp"
         android:text="Food Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintEnd_toStartOf="@+id/foodNameReq"
+        app:layout_constraintHorizontal_bias="0.536"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/reqBrowseBtn" />
 
     <EditText
         android:id="@+id/foodNameReq"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="Food Name"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/reqBrowseBtn" />
 
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="80dp"
         android:text="Quantity"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintEnd_toStartOf="@+id/numberPicker"
+        app:layout_constraintHorizontal_bias="0.394"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/foodNameReq" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <NumberPicker
         android:id="@+id/numberPicker"
         android:layout_width="88dp"
         android:layout_height="63dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="108dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/descriptionR" />
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="72dp"
         android:text="Description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintEnd_toStartOf="@+id/descriptionR"
+        app:layout_constraintHorizontal_bias="0.536"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/numberPicker" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <EditText
         android:id="@+id/descriptionR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="20dp"
         android:ems="10"
         android:hint="Description"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintTop_toBottomOf="@+id/foodNameReq" />
 
     <Button
         android:id="@+id/buttonR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
-        android:layout_marginTop="120dp"
-        android:text="Request"
+        android:layout_marginTop="72dp"
         android:background="@color/black"
+        android:text="Request"
         app:layout_constraintEnd_toStartOf="@+id/cancelR"
-        app:layout_constraintHorizontal_bias="0.216"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionR" />
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
         android:id="@+id/cancelR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
-        android:layout_marginEnd="76dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="92dp"
         android:text="Cancel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionR" />
+        app:layout_constraintTop_toBottomOf="@+id/numberPicker" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/buttonNavigationView1"
@@ -119,5 +115,25 @@
         app:menu="@menu/bottom_nav">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="125dp"
+        android:layout_height="109dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <Button
+        android:id="@+id/reqBrowseBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="24dp"
+        android:text="Browse"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

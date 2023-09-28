@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import com.bumptech.glide.Glide
 import com.example.assignment.databinding.ActivityLoginBinding
 import com.example.assignment.databinding.ActivityProfileBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -39,6 +41,12 @@ class ProfileActivity : AppCompatActivity() {
 
         if (uid.isNotEmpty()) {
             getUserData()
+        }
+
+
+        binding.logoutBtn.setOnClickListener{
+            auth.signOut()
+            startActivity( Intent(this,LoginActivity::class.java))
         }
 
         binding.historyBtn.setOnClickListener{
@@ -80,14 +88,22 @@ class ProfileActivity : AppCompatActivity() {
             db.collection("user").document(userId).get()
                 .addOnSuccessListener { document ->
                     if (document.exists()) {
+
                         val user = document.toObject(User::class.java)
+                        Glide.with(this) // Use 'this' for the activity context
+                            .load(user?.image) // Use the image URL from the User object
+                            .override(300, 300) // Set a fixed size of 300x300 pixels
+                            .into(binding.imageView)
+
                         if (user != null) {
                             binding.userId.text = user.userId
                             binding.userName.text = user.userName
                             binding.gender.text = user.gender
                             binding.dob.text = user.DOB
                             binding.address.text = user.address
+
                         }
+
                     } else {
                         Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show()
                     }

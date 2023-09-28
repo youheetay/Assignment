@@ -52,10 +52,10 @@ class DonorFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
         db.collection("food").addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-               if (error!= null) {
-                   Log.e("Firestore Error", error.message.toString())
-                   return
-               }
+                if (error!= null) {
+                    Log.e("Firestore Error", error.message.toString())
+                    return
+                }
                 //when success
                 for(dc: DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
@@ -67,5 +67,5 @@ class DonorFragment : Fragment() {
             }
         })
 
-   }
+    }
 }

@@ -51,4 +51,5 @@
         <item>Female</item>
     </string-array>
     <string name="title_activity_admin">AdminActivity</string>
+    <string name="title_activity_empty">EmptyActivity</string>
 </resources>

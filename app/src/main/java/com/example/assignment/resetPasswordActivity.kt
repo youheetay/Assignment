@@ -12,9 +12,10 @@ class resetPasswordActivity : AppCompatActivity() {
 
     private lateinit var setPassword: EditText
     private lateinit var btnResetPassword: Button
-    private lateinit var backButton: ImageButton
 
     private lateinit var auth: FirebaseAuth
+
+    private lateinit var backButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,29 +23,25 @@ class resetPasswordActivity : AppCompatActivity() {
 
 
         setPassword = findViewById(R.id.setPassword)
-        btnResetPassword = findViewById(R.id.resetBtn)
+        btnResetPassword =  findViewById(R.id.resetBtn)
         backButton = findViewById(R.id.backButton)
 
         auth = FirebaseAuth.getInstance()
 
-        btnResetPassword.setOnClickListener {
+        btnResetPassword.setOnClickListener{
             val password = setPassword.text.toString()
-            if (password == null) {
-                auth.sendPasswordResetEmail(password)
-                    .addOnSuccessListener {
-                        Toast.makeText(this, "Please Check Your Email", Toast.LENGTH_SHORT).show()
-                        finish()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "You have not Register", Toast.LENGTH_SHORT).show()
-                    }
-            } else {
-                Toast.makeText(this, "Field Cannot Be Empty", Toast.LENGTH_SHORT).show()
-            }
+            auth.sendPasswordResetEmail(password)
+                .addOnSuccessListener {
+                    Toast.makeText(this,"Please Check Your Email",Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                .addOnFailureListener{
+                    Toast.makeText(this,it.toString(),Toast.LENGTH_SHORT).show()
+                }
         }
 
-        backButton.setOnClickListener {
-            onBackPressed() // Call onBackPressed to navigate back
+        backButton.setOnClickListener{
+            finish()
         }
 
     }

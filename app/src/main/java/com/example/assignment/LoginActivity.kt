@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import com.example.assignment.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -16,13 +17,14 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
-
+    private lateinit var forgetPass: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
+        forgetPass = findViewById(R.id.forgot_password)
 
         // Set an OnFocusChangeListener to each EditText
         binding.loginEmail.setOnFocusChangeListener { _, hasFocus ->
@@ -94,6 +96,11 @@ class LoginActivity : AppCompatActivity() {
         binding.signupRedirectText.setOnClickListener{
             val signupIntent = Intent(this, SignupActivity::class.java)
             startActivity(signupIntent)
+        }
+
+        forgetPass.setOnClickListener{
+            val resetIntent = Intent(this, resetPasswordActivity::class.java)
+            startActivity(resetIntent)
         }
     }
 

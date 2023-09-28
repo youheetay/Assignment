@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import android.widget.Toast
 import com.example.assignment.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -15,23 +14,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var resetPassword: TextView
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        firebaseAuth = FirebaseAuth.getInstance()
-
-        resetPassword = findViewById(R.id.forgot_password)
-
-        resetPassword.setOnClickListener {
-            // Create an intent to navigate to the ResetPasswordActivity
-            val intent = Intent(this, resetPasswordActivity::class.java)
-            startActivity(intent)
-        }
+        auth = FirebaseAuth.getInstance()
 
         // Set an OnFocusChangeListener to each EditText
         binding.loginEmail.setOnFocusChangeListener { _, hasFocus ->
@@ -52,9 +43,10 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.loginEmail.text.toString()
             val password = binding.loginPassword.text.toString()
 
+
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 if (email.equals("admin@gmail.com") && password.equals("admin123")) {
-                    firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+                    auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                         if (it.isSuccessful) {
                             val intent = Intent(this, AdminActivity::class.java)
                             startActivity(intent)
@@ -63,56 +55,40 @@ class LoginActivity : AppCompatActivity() {
                         }
                     }
                 } else {
-                    firebaseAuth.signInWithEmailAndPassword(email, password)
+                    auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
-                                val currentUser = FirebaseAuth.getInstance().currentUser
-                                val userId = currentUser?.uid
-                                val firestore = FirebaseFirestore.getInstance()
-                                val userDocRef = firestore.collection("user").document(userId!!)
 
-                                userDocRef.get()
-                                    .addOnCompleteListener { documentSnapshot ->
-                                        if (documentSnapshot.isSuccessful) {
-                                            val documentData =
-                                                documentSnapshot.equals("userId") // Get all the fields in the document
+                                val currentUser = FirebaseAuth.getInstance().currentUser
+                                val userId = currentUser?.uid.toString()
+                                db = FirebaseFirestore.getInstance()
+
+                                db.collection("user").document(userId).get()
+                                    .addOnSuccessListener { document ->
+                                        if (document.exists()) {
 //                                            val userProfile = documentSnapshot.result?.toObject(User::class.java)
 //                                            val firestoreUid = documentSnapshot.getString("userId")
 
-                                            if (documentData == true && userId != null) {
-
-                                                // User has a profile setup, redirect to HomeActivity
-                                                val intent = Intent(this, HomeActivity::class.java)
-                                                startActivity(intent)
-                                            } else {
-                                                // User doesn't have a profile setup, redirect to ProfileSetup1
-                                                val intent = Intent(this, HomeActivity::class.java)
-                                                startActivity(intent)
-                                            }
+                                            // User has a profile setup, redirect to HomeActivity
+                                            val intent = Intent(this, HomeActivity::class.java)
+                                            startActivity(intent)
                                         } else {
-                                            Toast.makeText(
-                                                this,
-                                                "Error fetching user profile",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
+                                            // User doesn't have a profile setup, redirect to ProfileSetup1
+                                            val intent = Intent(this, ProfileSetup1::class.java)
+                                            startActivity(intent)
                                         }
+                                    } .addOnFailureListener { e ->
+                                        Toast.makeText(this, "Error getting user data: ${e.message}", Toast.LENGTH_SHORT).show()
                                     }
-                            } else {
-                                Toast.makeText(
-                                    this,
-                                    "You Have Not Sign up!Please sign up",
-                                    Toast.LENGTH_SHORT
-                                ).show()
                             }
                         }
                 }
-            } else {
-                Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
             }
+
 
         }
 
-        binding.signupRedirectText.setOnClickListener {
+        binding.signupRedirectText.setOnClickListener{
             val signupIntent = Intent(this, SignupActivity::class.java)
             startActivity(signupIntent)
         }

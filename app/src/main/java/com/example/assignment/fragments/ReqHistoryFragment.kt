@@ -1,11 +1,15 @@
 package com.example.assignment.fragments
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.Food
@@ -35,6 +39,28 @@ class ReqHistoryFragment : Fragment() {
     private lateinit var reqFoodArrayList: ArrayList<FoodR>
     private lateinit var historyAdapter: ReqHistoryAdapter
     private lateinit var db: FirebaseFirestore
+    private var uri: Uri? = null // Initialize with null
+    private var image: ImageView? = null // Initialize with null
+
+    private val galleryImage = registerForActivityResult(
+        ActivityResultContracts.GetContent(),
+        ActivityResultCallback { result: Uri? ->
+            result?.let {
+                uri = it
+
+                image?.setImageURI(result)
+            }
+        })
+
+    private val galleryImageAdapt = registerForActivityResult(
+        ActivityResultContracts.GetContent(),
+        ActivityResultCallback { result: Uri? ->
+            result?.let {
+                uri = it
+
+                historyAdapter.updateImageUri(result)
+            }
+        })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +75,7 @@ class ReqHistoryFragment : Fragment() {
 
         reqFoodArrayList = arrayListOf()
 
-        historyAdapter = ReqHistoryAdapter(reqFoodArrayList)
+        historyAdapter = ReqHistoryAdapter(reqFoodArrayList,galleryImageAdapt)
 
         recyclerView.adapter = historyAdapter
 
@@ -62,6 +88,7 @@ class ReqHistoryFragment : Fragment() {
 
 
         return rootView
+
     }
 
     private fun EventChangeListener(userId: String){
@@ -98,6 +125,9 @@ class ReqHistoryFragment : Fragment() {
             })
 
     }
+
+
+
 
     private fun updateFood(upatedFood: Food){
 

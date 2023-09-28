@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
-class HomeReqRecyclerAdapter(private val context: Context, private val foodReqList: ArrayList<FoodR>,private val parentContext: Context):
+class HomeReqRecyclerAdapter(private val context: Context, private var foodReqList: ArrayList<FoodR>, private val parentContext: Context):
     RecyclerView.Adapter<HomeReqRecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): HomeReqRecyclerAdapter.MyViewHolder {
@@ -40,6 +40,11 @@ class HomeReqRecyclerAdapter(private val context: Context, private val foodReqLi
         }
     }
 
+    fun setFilteredList(foodReqList: ArrayList<FoodR>){
+        this.foodReqList = foodReqList
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int {
         return foodReqList.size
     }
@@ -52,7 +57,7 @@ class HomeReqRecyclerAdapter(private val context: Context, private val foodReqLi
         val donateBtn: ImageView = itemView.findViewById(R.id.donateBtn)
     }
 
-    public fun showConfirmationDialog(itemPosition: Int) {
+    private fun showConfirmationDialog(itemPosition: Int) {
         val builder = AlertDialog.Builder(context)
 
         val inflater = LayoutInflater.from(context)
@@ -70,8 +75,9 @@ class HomeReqRecyclerAdapter(private val context: Context, private val foodReqLi
                 val oldQuantity = food.quantity ?: 0
                 val newQuantity = oldQuantity - selectedQuantity
 
+                if(selectedQuantity <= oldQuantity){
                 // Inside your showConfirmationDialog function, after making local changes:
-                if (newQuantity <= oldQuantity) {
+                if (newQuantity >= 0) {
                     // Update the quantity in the data source (foodList)
                     foodReqList[itemPosition].quantity = newQuantity
 
@@ -95,8 +101,11 @@ class HomeReqRecyclerAdapter(private val context: Context, private val foodReqLi
                         .addOnFailureListener { e ->
                             showErrorDialog(e.message)
                         }
+                    }
                 } else {
                     // Handle the case where the new quantity is negative (optional)
+                    Toast.makeText(context, "Quantity Exceeded", Toast.LENGTH_SHORT).show()
+
 
                 }
 

@@ -9,9 +9,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.NumberPicker
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.assignment.Food
 import com.example.assignment.HistoryAdapter.Companion.ARG_FOOD
 import com.example.assignment.R
@@ -24,6 +27,8 @@ class DonorFoodUpdateFragment : Fragment() {
     private lateinit var editFoodName: EditText
     private lateinit var editFoodDes: EditText
     private lateinit var updateBtn: Button
+    private lateinit var foodImage: ImageView
+    private lateinit var quantity: NumberPicker
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,48 +47,51 @@ class DonorFoodUpdateFragment : Fragment() {
         editFoodName = view.findViewById(R.id.editFoodName)
         editFoodDes = view.findViewById(R.id.editDes)
         updateBtn = view.findViewById(R.id.updateBtn)
+        quantity = view.findViewById(R.id.selectQuantity)
+        foodImage = view.findViewById(R.id.imageView)
 
         // Populate the EditText fields with the existing food data
         foodEdit?.let { food ->
             editFoodName.setText(food.foodName)
             editFoodDes.setText(food.foodDes)
+            quantity.value = food.quantity ?: 0 // Set the NumberPicker value to the existing quantity
+
+            Glide.with(requireContext())
+                .load(food.image) // Use the image URL from the Food object
+                .into(foodImage)
         }
 
         updateBtn.setOnClickListener {
-            // Handle the update button click here
             val updatedFoodName = editFoodName.text.toString()
             val updatedFoodDes = editFoodDes.text.toString()
+            val updatedQuantity = quantity.value // Get the updated quantity (assuming quantity is a NumberPicker)
 
-            // Update the food data in Firestore
-            foodEdit?.let { food ->
-                val db = FirebaseFirestore.getInstance()
+            val foodMap = hashMapOf(
+                "foodName" to updatedFoodName,
+                "foodDes" to updatedFoodDes,
+                "quantity" to updatedQuantity, // Include updated quantity
+                "image" to "updated_image_url" // Include the updated image URL
+            )
 
-                val foodMap = hashMapOf(
-                    "foodName" to updatedFoodName,
-                    "foodDes"  to updatedFoodDes
-                )
+            // Update the Firebase Firestore document
+            val db = FirebaseFirestore.getInstance()
+            // Get the document ID from the food object
+            val foodDocumentId = foodEdit?.id.toString()
 
-                // Get the document ID from the food object
-                val foodDocumentId = food.id.toString()
-
-                // Update the document with the specified ID using set() with merge option
-                db.collection("food").document(foodDocumentId)
-                    .set(foodMap, SetOptions.merge())
-                    .addOnSuccessListener {
-                        // Data updated successfully
-                        showSuccessDialog()
-                        openFragment(UpdateDonorScreenFragment())
-                    }
-                    .addOnFailureListener { exception ->
-                        // Handle the failure to update data
-                        showErrorDialog(exception.message)
-                    }
-            }
+            // Update the document with the specified ID using set() with merge option
+            db.collection("food").document(foodDocumentId)
+                .set(foodMap, SetOptions.merge())
+                .addOnSuccessListener {
+                    // Data updated successfully
+                    showSuccessDialog()
+                    openFragment(UpdateDonorScreenFragment())
+                }
+                .addOnFailureListener { exception ->
+                    // Handle the failure to update data
+                    showErrorDialog(exception.message)
+                }
         }
-
-
-
-        return view
+            return view
     }
 
     private fun showSuccessDialog() {

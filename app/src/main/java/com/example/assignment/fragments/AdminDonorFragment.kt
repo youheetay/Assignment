@@ -101,52 +101,57 @@ class AdminDonorFragment : Fragment() {
             val foodName = v.findViewById<EditText>(R.id.foodNameDonor).text.toString()
             val foodDes = v.findViewById<EditText>(R.id.foodDesDonor).text.toString()
             val selectedImageUri = uri // Get the selected image URI
+            val quantity = quantity.value
 
-            if (currentUser != null) {
-                val userId = currentUser.uid
+            if (validateInput(foodName, foodDes, selectedImageUri, quantity)) {
+                if (currentUser != null) {
+                    val userId = currentUser.uid
 
-                if (selectedImageUri != null) {
+                    if (selectedImageUri != null) {
 
-                    // Upload the selected image to Firebase Storage
-                    val storageRef = storageRef.getReference("images").child(System.currentTimeMillis().toString())
-                    storageRef.putFile(selectedImageUri)
-                        .addOnSuccessListener { task ->
-                            task.metadata?.reference?.downloadUrl
-                                ?.addOnSuccessListener { downloadUri ->
-                                    // Create a new Food object with the downloaded image URL
-                                    val food = Food(
-                                        id = task.metadata?.name,
-                                        foodName = foodName,
-                                        foodDes = foodDes,
-                                        userId = userId,
-                                        image = downloadUri.toString(),
-                                        quantity = quantity.value
-                                    )
+                        // Upload the selected image to Firebase Storage
+                        val storageRef = storageRef.getReference("images").child(System.currentTimeMillis().toString())
+                        storageRef.putFile(selectedImageUri)
+                            .addOnSuccessListener { task ->
+                                task.metadata?.reference?.downloadUrl
+                                    ?.addOnSuccessListener { downloadUri ->
+                                        // Create a new Food object with the downloaded image URL
+                                        val food = Food(
+                                            id = task.metadata?.name,
+                                            foodName = foodName,
+                                            foodDes = foodDes,
+                                            userId = userId,
+                                            image = downloadUri.toString(),
+                                            quantity = quantity
+                                        )
 
-                                    // Store the Food object in Firestore
-                                    db.collection("food").document(task.metadata?.name ?: "")
-                                        .set(food)
-                                        .addOnSuccessListener {
-                                            Toast.makeText(requireContext(), "Upload Successful", Toast.LENGTH_SHORT).show()
-                                        }
-                                        .addOnFailureListener { error ->
-                                            Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
-                                        }
-                                }
-                        }
-                        .addOnFailureListener { error ->
-                            Toast.makeText(requireContext(), "Upload failed: $error", Toast.LENGTH_SHORT).show()
-                        }
+                                        // Store the Food object in Firestore
+                                        db.collection("food").document(task.metadata?.name ?: "")
+                                            .set(food)
+                                            .addOnSuccessListener {
+                                                Toast.makeText(requireContext(), "Upload Successful", Toast.LENGTH_SHORT).show()
+                                                dialog.dismiss()
+                                            }
+                                            .addOnFailureListener { error ->
+                                                Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
+                                            }
+
+                                    }
+                            }
+                            .addOnFailureListener { error ->
+                                Toast.makeText(requireContext(), "Upload failed: $error", Toast.LENGTH_SHORT).show()
+
+                            }
+                    } else {
+                        // Handle the case where no image was selected
+                        Toast.makeText(requireContext(), "Please upload an image of food", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    // Handle the case where no image was selected
-                    Toast.makeText(requireContext(), "Please upload an image of food", Toast.LENGTH_SHORT).show()
+                    // Handle the case where the user is not signed in
+                    Toast.makeText(requireContext(), "User not signed in", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                // Handle the case where the user is not signed in
-                Toast.makeText(requireContext(), "User not signed in", Toast.LENGTH_SHORT).show()
             }
 
-            dialog.dismiss()
         }
 
         addDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
@@ -170,6 +175,41 @@ class AdminDonorFragment : Fragment() {
 
         addDialog.show()
     }
+
+    private fun validateInput(
+        foodName: String,
+        foodDes: String,
+        selectedImageUri: Uri?,
+        quantity: Int
+    ): Boolean {
+        if (foodName.isEmpty() || foodDes.isEmpty()) {
+            // Show an error message for empty fields
+            Toast.makeText(requireContext(), "Fields cannot be empty", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (selectedImageUri == null) {
+            // Show an error message for missing image
+            Toast.makeText(requireContext(), "Please upload an image of food", Toast.LENGTH_SHORT)
+                .show()
+            return false
+        }
+
+        if (quantity < 1 || quantity > 60) {
+            // Show an error message for quantity outside the valid range
+            Toast.makeText(
+                requireContext(),
+                "Quantity must be between 1 and 60",
+                Toast.LENGTH_SHORT
+            ).show()
+            return false
+        }
+
+        // Additional validation logic can be added here
+
+        return true // All validation checks passed
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

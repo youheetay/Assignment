@@ -91,7 +91,16 @@ class AdminDonorPendingFragment : Fragment() {
                             foodArray.id = foodDonorId
                             foodArrayList.add(foodArray)
 
+                            totalCount++
+                            // Update the textView
+                            updateTextView()
+
                         }
+                    }else if (dc.type == DocumentChange.Type.REMOVED) {
+
+                        totalCount--
+                        // Update the textView
+                        updateTextView()
                     }
                 }
 
@@ -101,22 +110,21 @@ class AdminDonorPendingFragment : Fragment() {
 
     }
 
+    private fun updateTextView() {
+        if (totalCount > 0) {
+            textView.text = "$totalCount record(s)"
+        } else {
+            textView.text = "No record(s)"
+        }
+    }
     override fun onResume() {
         super.onResume()
         val collectionRef : CollectionReference = db.collection("foodPendingDonor")
         collectionRef.get()
             .addOnCompleteListener { task: Task<QuerySnapshot> ->
                 if (task.isSuccessful) {
-                    // Get the QuerySnapshot containing all documents in the collection
-                    val querySnapshot = task.result
+                    updateTextView()
 
-                    // Get the total count of documents
-                    totalCount = querySnapshot.size()
-                    if(totalCount >0){
-                        textView.text = "$totalCount record(s)"
-                    }else{
-                        textView.text = "No record(s)"
-                    }
                 } else {
                     val exception = task.exception
                 }

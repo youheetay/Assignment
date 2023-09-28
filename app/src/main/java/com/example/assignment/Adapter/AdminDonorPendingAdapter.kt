@@ -52,6 +52,7 @@ class AdminDonorPendingAdapter (private val foodList: ArrayList<Food>) :
                                             foodList.remove(deleteFoodDonor)
                                             notifyItemRemoved(positionDelete)
                                             Toast.makeText(holder.itemView.context, "Approved Success", Toast.LENGTH_SHORT).show()
+
                                         }
                                         .addOnFailureListener { e ->
                                             Toast.makeText(holder.itemView.context, "Failed delete", Toast.LENGTH_SHORT).show()

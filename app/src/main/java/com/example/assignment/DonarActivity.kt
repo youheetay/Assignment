@@ -133,6 +133,9 @@ class DonarActivity : AppCompatActivity() {
                                                 "Upload Successful",
                                                 Toast.LENGTH_SHORT
                                             ).show()
+                                            val intent = Intent(this, HomeActivity::class.java)
+                                            startActivity(intent)
+                                            finish()
                                         }
                                         .addOnFailureListener { error ->
                                             Toast.makeText(
@@ -175,50 +178,6 @@ class DonarActivity : AppCompatActivity() {
             // Launch the image picker after requesting permission
             galleryImage.launch("image/*")
         }
-
-        // binding.uploadBtn.setOnClickListener {
-//            if (uri != null) {
-//                val userId = FirebaseAuth.getInstance().currentUser?.uid
-//                if (userId != null) {
-//                    val storageRef = storageRef.getReference("images").child(System.currentTimeMillis().toString())
-//                    storageRef.putFile(uri!!)
-//                        .addOnSuccessListener { task ->
-//                            task.metadata?.reference?.downloadUrl
-//                                ?.addOnSuccessListener { downloadUri ->
-//                                    // After uploading the image, create a new Food document
-//                                    // with the same document ID as the image
-//                                    val food = Food(
-//                                        id = task.metadata?.name, // Use the image's document ID
-//                                        foodName = editFoodName.text.toString(),
-//                                        foodDes = editDes.text.toString(),
-//                                        userId = userId,
-//                                        image = downloadUri.toString()
-//                                    )
-//
-//                                    // Store the Food object in Firestore with the same document ID
-//                                    db.collection("foodPendingDonar").document(task.metadata?.name ?: "")
-//                                        .set(food)
-//                                        .addOnSuccessListener {
-//                                            Toast.makeText(
-//                                                this,
-//                                                "Upload Successful",
-//                                                Toast.LENGTH_SHORT
-//                                            ).show()
-//                                        }
-//                                        .addOnFailureListener { error ->
-//                                            Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show()
-//                                        }
-//                                }
-//                        }
-//                        .addOnFailureListener { error ->
-//                            Toast.makeText(this, "Upload failed: $error", Toast.LENGTH_SHORT).show()
-//                        }
-//                }
-//            } else {
-//                // Handle the case where uri is not initialized (e.g., show an error message)
-//                Toast.makeText(this, "Please upload an image of food", Toast.LENGTH_SHORT).show()
-//            }
-        // }
 
 
         image?.setImageResource(R.drawable.baseline_image_24)
@@ -273,7 +232,7 @@ class DonarActivity : AppCompatActivity() {
                 // Call the method or code to upload the image here
             } else {
                 // Permission denied, show a message to the user or handle it accordingly
-                Toast.makeText(this, "Storage permission denied", Toast.LENGTH_SHORT).show()
+              //  Toast.makeText(this, "Storage permission denied", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -104,7 +104,8 @@ class RequesterActivity : AppCompatActivity() {
                                     db.collection("foodR").document(task.metadata?.name ?: "")
                                         .set(requestMap).addOnSuccessListener {
                                             Toast.makeText(this, "Successfully Request Food!", Toast.LENGTH_SHORT).show()
-                                            // Finish the current activity to go back to the previous page
+                                            val intent = Intent(this, HomeActivity::class.java)
+                                            startActivity(intent)
                                             finish()
                                         }
                                         .addOnFailureListener { error ->

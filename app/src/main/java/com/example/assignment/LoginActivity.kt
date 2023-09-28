@@ -43,7 +43,6 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.loginEmail.text.toString()
             val password = binding.loginPassword.text.toString()
 
-
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 if (email.equals("admin@gmail.com") && password.equals("admin123")) {
                     auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
@@ -78,11 +77,15 @@ class LoginActivity : AppCompatActivity() {
                                             startActivity(intent)
                                         }
                                     } .addOnFailureListener { e ->
-                                        Toast.makeText(this, "Error getting user data: ${e.message}", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this, "Please Sign Up first", Toast.LENGTH_SHORT).show()
                                     }
+                            }else{
+                                Toast.makeText(this, "Password or Email is Invalid", Toast.LENGTH_SHORT).show()
                             }
                         }
                 }
+            }else{
+                Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
             }
 
 

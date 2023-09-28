@@ -7,8 +7,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.NumberPicker
+import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -35,12 +37,20 @@ class DonarActivity : AppCompatActivity() {
     private lateinit var browseBtn: Button
     private lateinit var quantityDonar: TextView
 
+
     private var storageRef = Firebase.storage
     private val STORAGE_PERMISSION_CODE = 101 // Request code for storage permission
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDonarBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+//
+//        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+//        //setSupportActionBar(toolbar)
+//
+//        // Set the custom circular background for the Toolbar
+//        toolbar.setBackgroundResource(R.drawable.rounded_toolbar_background)
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.buttonNavigationView)
 

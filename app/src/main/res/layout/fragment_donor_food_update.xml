@@ -23,6 +23,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleDonar"/>
+
     <TextView
         android:id="@+id/foodName"
         android:layout_width="wrap_content"
@@ -44,46 +55,25 @@
         app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
 
     <TextView
-        android:id="@+id/type"
+        android:id="@+id/quantityDonar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="88dp"
-        android:text="Type"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="132dp"
+        android:text="Select Quantity"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        app:layout_constraintTop_toBottomOf="@+id/foodName" />
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="191dp"
-        android:layout_height="402dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toEndOf="@+id/type"
-        app:layout_constraintTop_toBottomOf="@+id/titleDonar">
+    <NumberPicker
+        android:id="@+id/selectQuantity"
+        android:layout_width="88dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.712"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editDes" />
 
-        <RadioButton
-            android:id="@+id/food"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="284dp"
-            android:text="Food"
-            app:layout_constraintStart_toEndOf="@+id/type"
-            app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
-
-        <RadioButton
-            android:id="@+id/drink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="284dp"
-            android:text="Drink"
-            app:layout_constraintStart_toEndOf="@+id/food"
-            app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
-
-    </RadioGroup>
 
     <EditText
         android:id="@+id/editFoodName"

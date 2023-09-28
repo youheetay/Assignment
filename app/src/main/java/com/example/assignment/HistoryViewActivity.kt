@@ -1,8 +1,15 @@
 package com.example.assignment
 
+import android.app.Activity
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -19,7 +26,9 @@ class HistoryViewActivity : AppCompatActivity() {
     private lateinit var tabLayout1 : TabLayout
     private lateinit var viewPagerHome : ViewPager2
     private lateinit var historyViewPagerAdapter : HistoryViewPagerAdapter
-
+    // Declare variables to store the selected image Uri and ImageView
+    private var uri: Uri? = null
+    private var image: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,4 +63,5 @@ class HistoryViewActivity : AppCompatActivity() {
             }
         })
     }
+
 }

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import com.example.assignment.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +16,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var resetPassword: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +24,14 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
+
+        resetPassword = findViewById(R.id.forgot_password)
+
+        resetPassword.setOnClickListener {
+            // Create an intent to navigate to the ResetPasswordActivity
+            val intent = Intent(this, resetPasswordActivity::class.java)
+            startActivity(intent)
+        }
 
         // Set an OnFocusChangeListener to each EditText
         binding.loginEmail.setOnFocusChangeListener { _, hasFocus ->

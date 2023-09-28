@@ -29,20 +29,14 @@ class DonarActivity : AppCompatActivity() {
 
     private lateinit var editFoodName: EditText
     private lateinit var editDes: EditText
-    private lateinit var submitBtn: Button
-    private lateinit var cancelBtn: Button
 
     private var image: ImageView? = null // Initialize with null
-    private lateinit var browseBtn: Button
-    private lateinit var uploadBtn: Button
-
-    private var storageRef = Firebase.storage
     private var uri: Uri? = null // Initialize with null
-
-    private val STORAGE_PERMISSION_CODE = 101 // Request code for storage permission
-
+    private lateinit var browseBtn: Button
     private lateinit var quantityDonar: TextView
 
+    private var storageRef = Firebase.storage
+    private val STORAGE_PERMISSION_CODE = 101 // Request code for storage permission
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDonarBinding.inflate(layoutInflater)
@@ -53,7 +47,6 @@ class DonarActivity : AppCompatActivity() {
         editFoodName = findViewById(R.id.editFoodName)
         editDes = findViewById(R.id.editDes)
         browseBtn = findViewById(R.id.browseBtn)
-        uploadBtn = findViewById(R.id.uploadBtn)
         image = findViewById(R.id.imageView)
         quantityDonar = findViewById(R.id.quantityDonar)
 

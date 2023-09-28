@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CalendarView
 import android.widget.ImageView
@@ -15,6 +16,7 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isNotEmpty
 import com.example.assignment.databinding.ActivityProfileSetupBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -50,6 +52,17 @@ class ProfileSetup1 : AppCompatActivity() {
         }
         val spinnerGender : Spinner = findViewById<Spinner>(R.id.spinnerGender)
 
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.gender,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerGender.adapter = adapter
+
+        }
+
+
         firebaseAuth = FirebaseAuth.getInstance()
 
         binding.dateOfBirth.setOnClickListener{
@@ -61,7 +74,7 @@ class ProfileSetup1 : AppCompatActivity() {
 
         binding.saveProfileBtn.setOnClickListener {
             val name = binding.profileName.text.toString()
-            val gender = binding.spinnerGender.text.toString()
+            val gender = spinnerGender.selectedItem.toString()
             val dob = binding.dateOfBirth.text.toString()
             val address = binding.profileAddress.text.toString()
 

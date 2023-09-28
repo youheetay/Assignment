@@ -101,6 +101,8 @@ class HomeReqRecyclerAdapter(private val context: Context, private var foodReqLi
                         .addOnFailureListener { e ->
                             showErrorDialog(e.message)
                         }
+                    }else {
+
                     }
                 } else {
                     // Handle the case where the new quantity is negative (optional)

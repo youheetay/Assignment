@@ -18,10 +18,7 @@
         <activity
             android:name=".HomeRecyclerAdapter2"
             android:exported="false" />
-        <activity
-            android:name=".list_item2"
-            android:name=".HistoryViewActivity"
-            android:exported="false" />
+
         <activity
             android:name=".fragments.ReqHistoryFragment"
             android:exported="false" />
@@ -32,7 +29,7 @@
             android:name=".ReqHistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfileSetup"
+            android:name=".ProfileSetup1"
             android:exported="false" />
         <activity
             android:name=".EditFoodActivity"
@@ -91,12 +88,11 @@
         <activity
             android:name=".RequesterActivity"
             android:exported="true" />
-        <activity
-            android:name=".HistoryActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ProfileSetup1"
-            android:exported="false" />
+
+        <activity android:name=".HistoryViewActivity"
+            android:exported="false"/>
+
+
     </application>
 
 </manifest>

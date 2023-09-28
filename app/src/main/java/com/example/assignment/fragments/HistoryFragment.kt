@@ -49,7 +49,7 @@ class HistoryFragment : Fragment() {
 
         foodArrayList = arrayListOf()
 
-        historyAdapter = HistoryAdapter(foodArrayList)
+        historyAdapter = HistoryAdapter(requireContext(),foodArrayList,parentFragmentManager)
 
         recyclerView.adapter = historyAdapter
 

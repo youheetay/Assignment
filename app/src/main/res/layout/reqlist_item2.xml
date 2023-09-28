@@ -3,16 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="8dp"
+    android:layout_margin="16dp"
     app:cardCornerRadius="8dp"
-    android:layout_margin="16dp">
+    app:cardElevation="8dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginVertical="6dp"
+        android:layout_marginStart="16dp"
         android:orientation="vertical">
+
+        <!-- Food Image -->
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitCenter" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -26,12 +33,12 @@
                 android:text="Food Name : "
                 android:textColor="@color/black"
                 android:textSize="26sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/foodNameReq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/foodNameReq"
                 android:layout_marginStart="8dp"
                 android:text="name"
                 android:textColor="@color/black"
@@ -56,12 +63,12 @@
                 android:text="Food Description : "
                 android:textColor="@color/black"
                 android:textSize="26sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/foodDesR"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/foodDesR"
                 android:layout_marginStart="8dp"
                 android:text="Description"
                 android:textColor="@color/black"
@@ -89,9 +96,9 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/quantityReq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/quantityReq"
                 android:layout_marginStart="8dp"
                 android:text="Quantity"
                 android:textColor="@color/black"
@@ -99,17 +106,29 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView12"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="invisible" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="120dp"
-            android:text="Donate" />
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/editBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="DONATE" />
+
+            <Button
+                android:id="@+id/deleteBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="DELETE" />
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

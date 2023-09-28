@@ -18,7 +18,6 @@
         tools:targetApi="31">
         <activity
             android:name=".resetPasswordActivity"
-            android:name=".QuantityDialog"
             android:exported="false" />
         <activity
             android:name=".HomeRecyclerAdapter2"
@@ -33,16 +32,13 @@
         <activity
             android:name=".QuantityDialog"
             android:exported="false" />
-        <activity
-            android:name=".HomeRecyclerAdapter2"
-            android:exported="false" />
-        <activity
-            android:name=".list_item2"
-            android:name=".ReqHistoryActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ProfileSetup1"
-            android:exported="false" />
+
+<!--        <activity-->
+<!--            android:name=".list_item2"-->
+<!--            android:exported="false" />-->
+<!--        <activity-->
+<!--            android:name=".ProfileSetup1"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".EditFoodActivity"
             android:exported="false" />
@@ -100,15 +96,12 @@
         <activity
             android:name=".RequesterActivity"
             android:exported="true" />
-<<<<<<<<< Temporary merge branch 1
-=========
+
         <activity
-            android:name=".HistoryActivity"
+            android:name=".HistoryViewActivity"
             android:exported="false" />
-        <activity
-            android:name=".ProfileSetup1"
-            android:exported="false" />
->>>>>>>>> Temporary merge branch 2
+
+
     </application>
 
 </manifest>

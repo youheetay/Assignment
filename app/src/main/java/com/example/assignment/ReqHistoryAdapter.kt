@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ReqHistoryAdapter (private val reqFoodList: ArrayList<FoodR> ):
@@ -28,10 +29,14 @@ class ReqHistoryAdapter (private val reqFoodList: ArrayList<FoodR> ):
         holder.foodDesR.text = food.foodDesR
         holder.quantity.text = food.quantity.toString()
 
-//        holder.editImage.setOnClickListener{
+        Glide.with(holder.itemView.context)
+            .load(food.image) // Use the image URL from the Food object
+            .into(holder.image)
+
+//        holder.editBtn.setOnClickListener{
 //
 //        }
-//        holder.deleteImage.setOnClickListener{
+//        holder.deleteBtn.setOnClickListener{
 //            val positionDelete = holder.adapterPosition
 //            val deleteFood = reqFoodList[positionDelete]
 //
@@ -80,8 +85,9 @@ class ReqHistoryAdapter (private val reqFoodList: ArrayList<FoodR> ):
         val foodNameR : TextView = itemView.findViewById(R.id.foodNameReq)
         val foodDesR : TextView = itemView.findViewById(R.id.foodDesR)
         val quantity : TextView = itemView.findViewById(R.id.quantityReq)
-//        val editImage: ImageView = itemView.findViewById(R.id.editBtn)
-//        val deleteImage: ImageView = itemView.findViewById(R.id.deleteBtn)
+        val image: ImageView = itemView.findViewById(R.id.imageView2)
+//        val editBtn: Button = itemView.findViewById(R.id.editBtn)
+//        val deleteBtn: Button = itemView.findViewById(R.id.deleteBtn)
         val documentId: String? = null
 
     }

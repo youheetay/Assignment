@@ -3,6 +3,7 @@ package com.example.assignment.fragments
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,14 +11,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.Adapter.AdminReqAdapter
+import com.example.assignment.Food
 import com.example.assignment.FoodR
 import com.example.assignment.R
 import com.example.assignment.emptyActivity
@@ -30,6 +35,8 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 
 
 class AdminRequestFragment : Fragment() {
@@ -41,7 +48,32 @@ class AdminRequestFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private var totalCount : Int = 0
     private lateinit var textView: TextView
-    //private val collectionReference = db.collection("foodR")
+    private var storageRef = Firebase.storage
+    private var uri: Uri? = null // Initialize with null
+    private var image: ImageView? = null // Initialize with null
+
+    private val STORAGE_PERMISSION_CODE = 101 // Request code for storage permission
+
+    private val galleryImage = registerForActivityResult(
+        ActivityResultContracts.GetContent(),
+        ActivityResultCallback { result: Uri? ->
+            result?.let {
+                uri = it
+
+                image?.setImageURI(result)
+            }
+        })
+
+    private val galleryImageAdapt = registerForActivityResult(
+        ActivityResultContracts.GetContent(),
+        ActivityResultCallback { result: Uri? ->
+            result?.let {
+                uri = it
+
+                AdminReqAdapter.updateImageUri(result)
+            }
+        })
+    private val collectionReference = db.collection("foodR")
 
 
     override fun onCreateView(
@@ -57,7 +89,7 @@ class AdminRequestFragment : Fragment() {
 
         foodArrayList = arrayListOf()
 
-        AdminReqAdapter = AdminReqAdapter(foodArrayList)
+        AdminReqAdapter = AdminReqAdapter(foodArrayList,galleryImageAdapt)
 
         recyclerView.adapter = AdminReqAdapter
 
@@ -106,72 +138,100 @@ class AdminRequestFragment : Fragment() {
         return rootView
     }
 
-    private fun addInfo(){
 
+    private fun addInfo() {
         val inflater = LayoutInflater.from(requireContext())
-        val v = inflater.inflate(R.layout.admin_add_req_card,null)
+        val v = inflater.inflate(R.layout.admin_add_req_card, null)
 
         val addDialog = AlertDialog.Builder(requireContext())
-        addDialog.setView(v)
+            .setView(v)
+            .create()
 
         val currentUser = FirebaseAuth.getInstance().currentUser
 
+        image = v.findViewById(R.id.imageView)
         val textView2 = v.findViewById<TextView>(R.id.textView2)
-        var quantity : NumberPicker = v.findViewById(R.id.foodNumReq)
+        var quantity: NumberPicker = v.findViewById(R.id.foodNumReq)
         quantity.maxValue = 60
         quantity.minValue = 1
         quantity.wrapSelectorWheel = true
-        quantity.setOnValueChangedListener { numberPicker, oldValue, newValue -> textView2.text = "Quantity : $newValue"
+        quantity.setOnValueChangedListener { _, _, newValue ->
+            textView2.text = "Quantity : $newValue"
         }
-        addDialog.setPositiveButton("Ok") { dialog, which ->
 
+        addDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok") { dialog, _ ->
             val foodName = v.findViewById<EditText>(R.id.foodNameReq).text.toString()
             val foodDes = v.findViewById<EditText>(R.id.foodDesReq).text.toString()
-            var quantity = quantity.value
+            val selectedImageUri = uri // Get the selected image URI
 
             if (currentUser != null) {
                 val userId = currentUser.uid
 
-                val data = hashMapOf(
-                    "foodNameR" to foodName,
-                    "foodDesR" to foodDes,
-                    "quantity" to quantity,
-                    "userId" to userId
-                )
+                if (selectedImageUri != null) {
 
-                // Add the data to Firestore
-                db.collection("foodR").add(data)
-                    .addOnSuccessListener {
-                        Toast.makeText(requireContext(), "Create Success", Toast.LENGTH_SHORT)
-                            .show()
-                        dialog.dismiss()
-                    }
-                    .addOnFailureListener { e ->
-                        // Handle failure and log the error message
-                        Log.e(TAG, "Error adding data: ${e.message}", e)
-                        Toast.makeText(
-                            requireContext(),
-                            "Error adding data: ${e.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-            }else{
+                    // Upload the selected image to Firebase Storage
+                    val storageRef = storageRef.getReference("images").child(System.currentTimeMillis().toString())
+                    storageRef.putFile(selectedImageUri)
+                        .addOnSuccessListener { task ->
+                            task.metadata?.reference?.downloadUrl
+                                ?.addOnSuccessListener { downloadUri ->
+                                    // Create a new Food object with the downloaded image URL
+                                    val food = FoodR(
+                                        id = task.metadata?.name,
+                                        foodNameR = foodName,
+                                        foodDesR = foodDes,
+                                        userId = userId,
+                                        image = downloadUri.toString(),
+                                        quantity = quantity.value
+                                    )
+
+                                    // Store the Food object in Firestore
+                                    db.collection("foodR").document(task.metadata?.name ?: "")
+                                        .set(food)
+                                        .addOnSuccessListener {
+                                            Toast.makeText(requireContext(), "Upload Successful", Toast.LENGTH_SHORT).show()
+                                        }
+                                        .addOnFailureListener { error ->
+                                            Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
+                                        }
+                                }
+                        }
+                        .addOnFailureListener { error ->
+                            Toast.makeText(requireContext(), "Upload failed: $error", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    // Handle the case where no image was selected
+                    Toast.makeText(requireContext(), "Please upload an image of food", Toast.LENGTH_SHORT).show()
+                }
+            } else {
                 // Handle the case where the user is not signed in
                 Toast.makeText(requireContext(), "User not signed in", Toast.LENGTH_SHORT).show()
             }
-        }
 
-
-        addDialog.setNegativeButton("Cancel"){
-                dialog, which ->
             dialog.dismiss()
-            //Toast.makeText(requireContext(), "", Toast.LENGTH_SHORT).show()
         }
 
-        addDialog.create()
+        addDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        v.findViewById<Button>(R.id.browseBtn).setOnClickListener {
+            // Launch the image picker after requesting permission
+            galleryImage.launch("image/*")
+        }
+        image?.setImageResource(R.drawable.baseline_image_24)
+
+        // Resize the ImageView
+        val newWidthInPixels = 300 // Adjust this value as needed
+        val newHeightInPixels = 300 // Adjust this value as needed
+        val layoutParams = image?.layoutParams
+        layoutParams?.width = newWidthInPixels
+        layoutParams?.height = newHeightInPixels
+        image?.layoutParams = layoutParams
+
+
         addDialog.show()
     }
-
     private fun EventChangeListener(userId: String){
 
         //db = FirebaseFirestore.getInstance()

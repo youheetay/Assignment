@@ -32,7 +32,7 @@ class AdminDonorAdapter(
     RecyclerView.Adapter<AdminDonorAdapter.MyViewHolder>() {
 
     private var imageUri: Uri? = null
-    //private var imageView : ImageView? = null
+    private var imageView : ImageView? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdminDonorAdapter.MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_admin,parent,false)
         return MyViewHolder(itemView)
@@ -130,7 +130,7 @@ class AdminDonorAdapter(
     fun updateImageUri(newUri: Uri?) {
         imageUri = newUri
         notifyDataSetChanged() // Notify the adapter that the data has changed
-
+        imageView?.setImageURI(imageUri)
     }
 
     override fun onBindViewHolder(holder: AdminDonorAdapter.MyViewHolder, position: Int) {
@@ -155,8 +155,8 @@ class AdminDonorAdapter(
             alertDialogBuilder.setTitle("Edit Food")
 
             val browseBtn = dialogView.findViewById<Button>(R.id.browseBtn)
-            val imageView = dialogView.findViewById<ImageView>(R.id.imageView)
-
+            //val imageView = dialogView.findViewById<ImageView>(R.id.imageView)
+            imageView = dialogView.findViewById(R.id.imageView)
 
             val textView2 = dialogView.findViewById<TextView>(R.id.textView2)
             val nameEditText = dialogView.findViewById<EditText>(R.id.editFoodNameDonor)
@@ -176,16 +176,18 @@ class AdminDonorAdapter(
 
             alertDialogBuilder.setView(dialogView)
 
-            if (imageUri != null) {
-                //imageView?.setImageURI(imageUri)
-                Glide.with(holder.itemView.context)
-                    .load(imageUri)
-                    .into(imageView)
-            } else {
-                //imageView.setImageURI(imageUri)
-                Glide.with(holder.itemView.context)
-                    .load(updateFoodDonor.image) // Use the image URL from the Food object
-                    .into(imageView)
+            imageView?.let { iv ->
+                // Load the image using Glide if imageUri is not null
+                if (imageUri != null) {
+                    Glide.with(holder.itemView.context)
+                        .load(imageUri)
+                        .into(iv)
+                } else {
+                    iv.setImageURI(null) // Clear the ImageView if no image is selected
+                    Glide.with(holder.itemView.context)
+                        .load(updateFoodDonor.image) // Use the image URL from the Food object
+                        .into(iv)
+                }
             }
 
             browseBtn.setOnClickListener {
@@ -203,9 +205,10 @@ class AdminDonorAdapter(
                 val db = FirebaseFirestore.getInstance()
 
                 updateFoodDetailsWithImage(holder, position, newName, newDes, newQuantity, imageUri)
-
+                imageUri = null
             }
             alertDialogBuilder.setNegativeButton("Cancel") { dialog, _ ->
+                imageUri = null
                 dialog.dismiss()
             }
 
@@ -244,27 +247,28 @@ class AdminDonorAdapter(
                         .delete()
                         .addOnSuccessListener {
                             val storageRef = Firebase.storage.getReference("images/$deleteFoodId")
-                            storageRef.delete()
-                                .addOnSuccessListener {
-// change to snakbar
-                                    Toast.makeText(
-                                        holder.itemView.context,
-                                        "You have deleted successfully",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                                .addOnFailureListener { exception ->
-                                    Log.e(
-                                        ContentValues.TAG,
-                                        "Error deleting Food from Firestore: $exception"
-                                    )
-                                    Toast.makeText(
-                                        holder.itemView.context,
-                                        "Not Delete Successful",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-
+                            if(storageRef != null){
+                                storageRef.delete()
+                                    .addOnSuccessListener {
+                                        // change to snakbar
+                                        Toast.makeText(
+                                            holder.itemView.context,
+                                            "You have deleted successfully",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        Log.e(
+                                            ContentValues.TAG,
+                                            "Error deleting image from Firestore: $exception"
+                                        )
+                                        Toast.makeText(
+                                            holder.itemView.context,
+                                            "Not Delete Successful",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                            }
 
                         }
                         .addOnFailureListener { exception ->

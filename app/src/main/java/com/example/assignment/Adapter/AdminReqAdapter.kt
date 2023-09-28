@@ -1,8 +1,10 @@
 package com.example.assignment.Adapter
 
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,20 +15,122 @@ import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.assignment.FoodR
 import com.example.assignment.R
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import java.lang.Integer.parseInt
 
-class AdminReqAdapter (private val foodList: ArrayList<FoodR>) :
+class AdminReqAdapter (private val foodList: ArrayList<FoodR>,
+                       private val galleryImage: ActivityResultLauncher<String>
+) :
     RecyclerView.Adapter<AdminReqAdapter.MyViewHolder>() {
-
+    private var imageUri: Uri? = null
+    private var imageView : ImageView? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdminReqAdapter.MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_admin,parent,false)
         return MyViewHolder(itemView)
+    }
+
+    private fun updateFoodDetailsWithImage(
+        holder: AdminReqAdapter.MyViewHolder,
+        position: Int,
+        newName: String,
+        newDes: String,
+        newQuantity: Int,
+        uri: Uri? // Pass the selected image URI as a parameter
+    ) {
+
+        if (uri == null) {
+            val db = FirebaseFirestore.getInstance()
+            val updatedData = mapOf(
+                "foodRName" to newName,
+                "foodRDes" to newDes,
+                "quantity" to newQuantity
+            )
+
+            db.collection("foodR").document(foodList[position].id.toString())
+                .update(updatedData)
+                .addOnSuccessListener {
+                    foodList[position].foodNameR = newName
+                    foodList[position].foodDesR = newDes
+                    foodList[position].quantity = newQuantity
+                    notifyItemChanged(position)
+                    Toast.makeText(
+                        holder.itemView.context,
+                        "Update Success",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        holder.itemView.context,
+                        "Error updating food: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        } else {
+            // Handle the case when a new image is selected
+            val db = FirebaseFirestore.getInstance()
+
+            // Upload the selected image to Firebase Storage
+            val storageRef =
+                Firebase.storage.getReference("images").child(System.currentTimeMillis().toString())
+            storageRef.putFile(uri)
+                .addOnSuccessListener { taskSnapshot ->
+                    taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { downloadUri ->
+                        // Update the food details with the new image URL
+                        val updatedData = mapOf(
+                            "foodNameR" to newName,
+                            "foodDesR" to newDes,
+                            "quantity" to newQuantity,
+                            "image" to downloadUri.toString() // Update the image URL
+                        )
+
+                        db.collection("foodR").document(foodList[position].id.toString())
+                            .update(updatedData)
+                            .addOnSuccessListener {
+                                foodList[position].foodNameR = newName
+                                foodList[position].foodDesR = newDes
+                                foodList[position].quantity = newQuantity
+                                foodList[position].image =
+                                    downloadUri.toString() // Update the image URL
+                                notifyItemChanged(position)
+                                Toast.makeText(
+                                    holder.itemView.context,
+                                    "Update Success",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(
+                                    holder.itemView.context,
+                                    "Error updating food: ${e.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        holder.itemView.context,
+                        "Error uploading image: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        }
+    }
+
+    fun updateImageUri(newUri: Uri?) {
+        imageUri = newUri
+        notifyDataSetChanged() // Notify the adapter that the data has changed
+        imageView?.setImageURI(imageUri)
     }
 
     override fun onBindViewHolder(holder: AdminReqAdapter.MyViewHolder, position: Int) {
@@ -38,10 +142,6 @@ class AdminReqAdapter (private val foodList: ArrayList<FoodR>) :
             .load(food.image) // Use the image URL from the Food object
             .into(holder.foodImage)
 
-//        Glide.with(holder.itemView.context)
-//            .load(food.image) // Use the image URL from the Food object
-//            .into(holder.foodImage)
-
 
         holder.editBtn.setOnClickListener{
             val positionUpdate = holder.adapterPosition
@@ -50,6 +150,10 @@ class AdminReqAdapter (private val foodList: ArrayList<FoodR>) :
             val dialogView = LayoutInflater.from(holder.itemView.context).inflate(R.layout.admin_edit_req_card, null)
             val alertDialogBuilder = AlertDialog.Builder(holder.itemView.context)
             alertDialogBuilder.setTitle("Edit Food")
+
+            val browseBtn = dialogView.findViewById<Button>(R.id.browseBtn)
+            //val imageView = dialogView.findViewById<ImageView>(R.id.imageView)
+            imageView = dialogView.findViewById(R.id.imageView)
 
             val textView2 = dialogView.findViewById<TextView>(R.id.textView2)
             val nameEditText = dialogView.findViewById<EditText>(R.id.editFoodNameReq)
@@ -67,38 +171,48 @@ class AdminReqAdapter (private val foodList: ArrayList<FoodR>) :
 
             alertDialogBuilder.setView(dialogView)
 
+            imageView?.let { iv ->
+                // Load the image using Glide if imageUri is not null
+                if (imageUri != null) {
+                    Glide.with(holder.itemView.context)
+                        .load(imageUri)
+                        .into(iv)
+                } else {
+                    iv.setImageURI(null) // Clear the ImageView if no image is selected
+                    Glide.with(holder.itemView.context)
+                        .load(updateFoodReq.image) // Use the image URL from the Food object
+                        .into(iv)
+                }
+            }
+
+            browseBtn.setOnClickListener {
+                // Launch the image picker
+                galleryImage.launch("image/*")
+                updateImageUri(imageUri)
+
+            }
+
             alertDialogBuilder.setPositiveButton("Update"){ _, _ ->
                 val newName = nameEditText.text.toString()
                 val newDes = descriptionEditText.text.toString()
                 val newQuantity = quantityEditText.value
                 val db = FirebaseFirestore.getInstance()
 
+                updateFoodDetailsWithImage(holder, position, newName, newDes, newQuantity, imageUri)
 
-                //updateFood(positionUpdate, newName, newDes, newQuantity)
-
-                val updatedData = mapOf(
-                    "foodNameR" to newName,
-                    "foodDesR" to newDes,
-                    "quantity" to newQuantity
-                )
-
-                db.collection("foodR").document(updateFoodReq.id.toString()).update(updatedData)
-                    .addOnSuccessListener {
-                        updateFoodReq.foodNameR = newName
-                        updateFoodReq.foodDesR = newDes
-                        updateFoodReq.quantity = newQuantity
-                        notifyItemChanged(position)
-                        Toast.makeText(holder.itemView.context, "Update Success", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(holder.itemView.context, "Error updating food: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
-
-
+                imageUri = null
             }
             alertDialogBuilder.setNegativeButton("Cancel") { dialog, _ ->
+                imageUri = null
                 dialog.dismiss()
             }
+
+            val newWidthInPixels = 300 // Adjust this value as needed
+            val newHeightInPixels = 300 // Adjust this value as needed
+            val layoutParams = imageView?.layoutParams
+            layoutParams?.width = newWidthInPixels
+            layoutParams?.height = newHeightInPixels
+            imageView?.layoutParams = layoutParams
             alertDialogBuilder.show()
 
         }
@@ -126,8 +240,29 @@ class AdminReqAdapter (private val foodList: ArrayList<FoodR>) :
                     food.document(deleteFoodId)
                         .delete()
                         .addOnSuccessListener {
-                            // change to snakbar
-                            Toast.makeText(holder.itemView.context, "You have deleted successfully", Toast.LENGTH_SHORT).show()
+                            val storageRef = Firebase.storage.getReference("images/$deleteFoodId")
+                            if(storageRef != null){
+                                storageRef.delete()
+                                    .addOnSuccessListener {
+                                        // change to snakbar
+                                        Toast.makeText(
+                                            holder.itemView.context,
+                                            "You have deleted successfully",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        Log.e(
+                                            ContentValues.TAG,
+                                            "Error deleting image from Firestore: $exception"
+                                        )
+                                        Toast.makeText(
+                                            holder.itemView.context,
+                                            "Not Delete Successful",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                            }
 
                         }
                         .addOnFailureListener { exception ->

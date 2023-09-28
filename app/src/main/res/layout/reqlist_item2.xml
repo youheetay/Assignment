@@ -130,5 +130,17 @@
                 android:text="DELETE" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/editHBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit" />
+
+        <Button
+            android:id="@+id/dltHBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

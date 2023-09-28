@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    tools:context=".EditPageDialog">
 
 
     <TextView
-        android:id="@+id/titleRequestor"
+        android:id="@+id/titleDonar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleRequestor"/>
+        app:layout_constraintTop_toBottomOf="@+id/titleDonar"/>
 
     <Button
         android:id="@+id/browseBtn"
@@ -51,7 +51,7 @@
         android:layout_marginTop="144dp"
         android:text="Food Name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleRequestor" />
+        app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
 
     <TextView
         android:id="@+id/description"
@@ -61,7 +61,7 @@
         android:layout_marginTop="220dp"
         android:text="Description"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleRequestor" />
+        app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
 
 
 
@@ -76,7 +76,7 @@
         android:ems="10"
         android:inputType="text"
         app:layout_constraintStart_toEndOf="@+id/foodName"
-        app:layout_constraintTop_toBottomOf="@+id/titleRequestor" />
+        app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
 
     <EditText
         android:id="@+id/editDes"
@@ -89,7 +89,7 @@
         android:ems="10"
         android:inputType="text"
         app:layout_constraintStart_toEndOf="@+id/description"
-        app:layout_constraintTop_toBottomOf="@+id/titleRequestor" />
+        app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
 
     <TextView
         android:id="@+id/quantityRequestor"

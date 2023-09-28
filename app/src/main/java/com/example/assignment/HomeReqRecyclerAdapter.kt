@@ -1,8 +1,10 @@
 package com.example.assignment
 
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,7 +63,8 @@ class HomeReqRecyclerAdapter(private val context: Context, private var foodReqLi
         val builder = AlertDialog.Builder(context)
 
         val inflater = LayoutInflater.from(context)
-        val dialogView = inflater.inflate(R.layout.donate_dialog, null) // Create a custom dialog layout
+        val dialogView =
+            inflater.inflate(R.layout.donate_dialog, null) // Create a custom dialog layout
 
         val quantityPicker = dialogView.findViewById<NumberPicker>(R.id.numberPicker)
         quantityPicker.maxValue = 60
@@ -75,37 +78,62 @@ class HomeReqRecyclerAdapter(private val context: Context, private var foodReqLi
                 val oldQuantity = food.quantity ?: 0
                 val newQuantity = oldQuantity - selectedQuantity
 
-                if(selectedQuantity <= oldQuantity){
-                // Inside your showConfirmationDialog function, after making local changes:
-                if (newQuantity >= 0) {
-                    // Update the quantity in the data source (foodList)
-                    foodReqList[itemPosition].quantity = newQuantity
+                if (selectedQuantity <= oldQuantity) {
+                    // Inside your showConfirmationDialog function, after making local changes:
+                    if (newQuantity >= 0) {
+                        // Update the quantity in the data source (foodList)
+                        foodReqList[itemPosition].quantity = newQuantity
 
-                    // Update the Firebase Firestore document with the new quantity
-                    val db = FirebaseFirestore.getInstance()
+                        // Update the Firebase Firestore document with the new quantity
+                        val db = FirebaseFirestore.getInstance()
 
-                    // Get the document ID from the food object
-                    val foodDocumentId = food.id.toString()
+                        // Get the document ID from the food object
+                        val foodDocumentId = food.id.toString()
 
-                    // Create a map with the updated quantity
-                    val updatedData = hashMapOf(
-                        "quantity" to newQuantity
-                    )
+                        // Create a map with the updated quantity
+                        val updatedData = hashMapOf(
+                            "quantity" to newQuantity
+                        )
 
-                    // Update the document with the specified ID using set() with merge option
-                    db.collection("foodR").document(foodDocumentId)
-                        .set(updatedData, SetOptions.merge())
-                        .addOnSuccessListener {
-                            showSuccessDialog()
-                        }
-                        .addOnFailureListener { e ->
-                            showErrorDialog(e.message)
-                        }
+                        // Update the document with the specified ID using set() with merge option
+                        db.collection("foodR").document(foodDocumentId)
+                            .set(updatedData, SetOptions.merge())
+                            .addOnSuccessListener {
+                                showSuccessDialog()
+                            }
+                            .addOnFailureListener { e ->
+                                showErrorDialog(e.message)
+                            }
                     }
                 } else {
                     // Handle the case where the new quantity is negative (optional)
                     Toast.makeText(context, "Quantity Exceeded", Toast.LENGTH_SHORT).show()
+                }
 
+                // Check if newQuantity is 0 and delete the item
+                if (newQuantity == 0) {
+                    val positionDelete = itemPosition
+                    val deleteFood = foodReqList[positionDelete]
+                    // Remove the notification from the list locally
+                    foodReqList.remove(deleteFood)
+                    notifyItemRemoved(positionDelete)
+
+                    // Delete the notification from Firestore
+                    val db = FirebaseFirestore.getInstance()
+                    val food = db.collection("foodR")
+
+                    // Use the correct document ID to delete the specific notification in Firestore
+                    val deleteFoodId = deleteFood.id // Assuming id is the correct document ID
+                    if (deleteFoodId != null) {
+                        food.document(deleteFoodId)
+                            .delete()
+                            .addOnSuccessListener {
+
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.e(ContentValues.TAG, "Error deleting Food from Firestore: $exception")
+                            }
+                    }
 
                 }
 
@@ -117,6 +145,7 @@ class HomeReqRecyclerAdapter(private val context: Context, private var foodReqLi
 
         val dialog: AlertDialog = builder.create()
         dialog.show()
+
     }
 
     private fun showSuccessDialog() {

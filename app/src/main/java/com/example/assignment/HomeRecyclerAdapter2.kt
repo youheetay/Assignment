@@ -1,8 +1,10 @@
 package com.example.assignment
 
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +15,9 @@ import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+//import com.google.firebase.database.DatabaseError
+//import com.google.firebase.database.DatabaseReference
+//import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.protobuf.Value
@@ -101,10 +103,36 @@ class HomeRecyclerAdapter2 (private val context: Context, private val foodList: 
                             showSuccessDialog()
                         }
                         .addOnFailureListener { e ->
-                           showErrorDialog(e.message)
+                            showErrorDialog(e.message)
                         }
                 } else {
                     // Handle the case where the new quantity is negative (optional)
+                }
+                // Check if newQuantity is 0 and delete the item
+                if (newQuantity == 0) {
+                    val positionDelete = itemPosition
+                    val deleteFood = foodList[positionDelete]
+                    // Remove the notification from the list locally
+                    foodList.remove(deleteFood)
+                    notifyItemRemoved(positionDelete)
+
+                    // Delete the notification from Firestore
+                    val db = FirebaseFirestore.getInstance()
+                    val food = db.collection("food")
+
+                    // Use the correct document ID to delete the specific notification in Firestore
+                    val deleteFoodId = deleteFood.id // Assuming id is the correct document ID
+                    if (deleteFoodId != null) {
+                        food.document(deleteFoodId)
+                            .delete()
+                            .addOnSuccessListener {
+
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.e(ContentValues.TAG, "Error deleting Food from Firestore: $exception")
+                            }
+                    }
+
                 }
 
                 dialogInterface.dismiss()

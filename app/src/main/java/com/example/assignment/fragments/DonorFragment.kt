@@ -9,7 +9,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.Food
-import com.example.assignment.Adapter.HomeRecyclerAdapter2
+import com.example.assignment.HomeRecyclerAdapter2
+//import com.example.assignment.Adapter.HomeRecyclerAdapter2
 import com.example.assignment.R
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener

@@ -1,4 +1,4 @@
-package com.example.assignment.Adapter
+package com.example.assignment
 
 import android.app.AlertDialog
 import android.content.ContentValues
@@ -13,27 +13,23 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.assignment.Food
-import com.example.assignment.R
-//import com.google.firebase.database.DatabaseError
-//import com.google.firebase.database.DatabaseReference
-//import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+
 
 
 class HomeRecyclerAdapter2 (private val context: Context, private val foodList: ArrayList<Food>, private val parentContext: Context ): RecyclerView.Adapter<HomeRecyclerAdapter2.MyViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MyViewHolder {
+    ): HomeRecyclerAdapter2.MyViewHolder {
 
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.list_item2, parent, false)
         return MyViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: HomeRecyclerAdapter2.MyViewHolder, position: Int) {
         val food: Food = foodList[position]
         holder.foodName.text = food.foodName
         holder.foodDes.text = food.foodDes
@@ -102,7 +98,7 @@ class HomeRecyclerAdapter2 (private val context: Context, private val foodList: 
                             showSuccessDialog()
                         }
                         .addOnFailureListener { e ->
-                            showErrorDialog(e.message)
+                           showErrorDialog(e.message)
                         }
                 } else {
                     // Handle the case where the new quantity is negative (optional)

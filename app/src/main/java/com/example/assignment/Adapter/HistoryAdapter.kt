@@ -247,11 +247,11 @@ class HistoryAdapter(
                 foodList.remove(deleteFood)
                 notifyItemRemoved(positionDelete)
 
-                // Delete the notification from Firestore
+                // Delete the food from Firestore
                 val db = FirebaseFirestore.getInstance()
                 val food = db.collection("food")
 
-                // Use the correct document ID to delete the specific notification in Firestore
+                // Use the correct document ID to delete the specific food in Firestore
                 val deleteFoodId = deleteFood.id// Assuming id is the correct document ID
                 if (deleteFoodId != null) {
                     food.document(deleteFoodId)

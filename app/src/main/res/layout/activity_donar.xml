@@ -40,11 +40,13 @@
         android:id="@+id/browseBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="156dp"
         android:text="Browse"
         app:layout_constraintBottom_toTopOf="@+id/editFoodName"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -120,23 +122,23 @@
         app:layout_constraintTop_toBottomOf="@+id/editDes" />
 
     <Button
-        android:id="@+id/submitBtn"
+        android:id="@+id/cancelBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
         android:layout_marginTop="24dp"
-        android:text="Submit"
+        android:text="Cancel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/selectQuantity" />
 
     <Button
-        android:id="@+id/cancelBtn"
+        android:id="@+id/submitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="68dp"
         android:layout_marginTop="24dp"
-        android:text="Cancel"
-        app:layout_constraintStart_toEndOf="@+id/submitBtn"
+        android:text="Submit"
+        app:layout_constraintStart_toEndOf="@+id/cancelBtn"
         app:layout_constraintTop_toBottomOf="@+id/selectQuantity" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

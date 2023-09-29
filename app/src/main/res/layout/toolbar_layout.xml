@@ -15,6 +15,7 @@
         android:background="#9AF49E"
         app:iconifiedByDefault="false"
         app:queryBackground="@android:color/transparent"
+        android:focusable="false"
         app:queryHint="Search here ..." />
 
 

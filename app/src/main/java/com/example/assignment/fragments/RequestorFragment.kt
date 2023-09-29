@@ -39,20 +39,20 @@ class RequestorFragment : Fragment() {
         recyclerViewReq.layoutManager = LinearLayoutManager(requireContext())
         recyclerViewReq.setHasFixedSize(true)
 
-        // Find the SearchView inside the included layout
-        val includedLayout = rootView.findViewById<View>(R.id.include)
-        val searchView = includedLayout.findViewById<SearchView>(R.id.searchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                filterList(newText)
-                return true
-            }
-
-        })
+//        // Find the SearchView inside the included layout
+//        val includedLayout = rootView.findViewById<View>(R.id.include)
+//        val searchView = includedLayout.findViewById<SearchView>(R.id.searchView)
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                return false
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                filterList(newText)
+//                return true
+//            }
+//
+//        })
 
         foodReqArrayList = arrayListOf()
 

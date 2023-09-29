@@ -127,10 +127,10 @@ class ReqHistoryAdapter (private val reqFoodList: ArrayList<FoodR>,
 
     // Declare variables to store the selected image Uri and ImageView
     private var uri: Uri? = null
-    private var image: ImageView? = null
+    private var imageView: ImageView? = null
     fun updateImageUri(newUri: Uri?) {
         imageUri = newUri
-        image?.setImageURI(newUri)
+        imageView?.setImageURI(newUri)
         notifyDataSetChanged() // Notify the adapter that the data has changed
 
     }
@@ -159,10 +159,10 @@ class ReqHistoryAdapter (private val reqFoodList: ArrayList<FoodR>,
             val dialogView = LayoutInflater.from(holder.itemView.context)
                 .inflate(R.layout.edit_req_dialog, null)
             val alertDialogBuilder = AlertDialog.Builder(holder.itemView.context)
-            alertDialogBuilder.setTitle("Edit Food")
+
 
             val browseBtn = dialogView.findViewById<Button>(R.id.browseBtn)
-            val imageView = dialogView.findViewById<ImageView>(R.id.imageView)
+            imageView = dialogView.findViewById<ImageView>(R.id.imageView)
 
 
             val textView2 = dialogView.findViewById<TextView>(R.id.quantityRequestor)
@@ -182,17 +182,18 @@ class ReqHistoryAdapter (private val reqFoodList: ArrayList<FoodR>,
 
 
             alertDialogBuilder.setView(dialogView)
-
-            if (imageUri != null) {
-                //imageView?.setImageURI(imageUri)
-                Glide.with(holder.itemView.context)
-                    .load(imageUri)
-                    .into(imageView)
-            } else {
-                //imageView.setImageURI(imageUri)
-                Glide.with(holder.itemView.context)
-                    .load(updateFoodRequestor.image) // Use the image URL from the Food object
-                    .into(imageView)
+            imageView?.let { iv ->
+                // Load the image using Glide if imageUri is not null
+                if (imageUri != null) {
+                    Glide.with(holder.itemView.context)
+                        .load(imageUri)
+                        .into(iv)
+                } else {
+                    iv.setImageURI(null) // Clear the ImageView if no image is selected
+                    Glide.with(holder.itemView.context)
+                        .load(updateFoodRequestor.image) // Use the image URL from the Food object
+                        .into(iv)
+                }
             }
 
             browseBtn.setOnClickListener {

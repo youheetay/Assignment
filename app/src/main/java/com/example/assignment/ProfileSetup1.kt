@@ -112,7 +112,7 @@ class ProfileSetup1 : AppCompatActivity() {
                                                 )
                                                     .show()
 
-                                                val intent = Intent(this, UserActivity::class.java)
+                                                val intent = Intent(this, HomeActivity::class.java)
 
                                                 startActivity(intent)
                                             }

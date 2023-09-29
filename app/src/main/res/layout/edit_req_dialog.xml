@@ -21,94 +21,101 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/editFoodName"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.176" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_width="72dp"
+        android:layout_height="66dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleDonar"/>
+        app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
+
 
     <Button
         android:id="@+id/browseBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="124dp"
+        android:layout_marginTop="28dp"
         android:text="Browse"
-        tools:layout_editor_absoluteX="160dp"
-        tools:layout_editor_absoluteY="106dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
         android:id="@+id/foodName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="144dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="52dp"
         android:text="Food Name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
+        app:layout_constraintTop_toBottomOf="@+id/browseBtn" />
 
     <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="220dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="92dp"
         android:text="Description"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
-
-
+        app:layout_constraintTop_toBottomOf="@+id/foodName" />
 
     <EditText
         android:id="@+id/editFoodName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/textborder"
-        android:padding="8dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="131dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/textborder"
         android:ems="10"
         android:inputType="text"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/foodName"
-        app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
+        app:layout_constraintTop_toBottomOf="@+id/browseBtn" />
 
     <EditText
         android:id="@+id/editDes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/textborder"
-        android:padding="8dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/textborder"
         android:ems="10"
         android:inputType="text"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.27"
         app:layout_constraintStart_toEndOf="@+id/description"
-        app:layout_constraintTop_toBottomOf="@+id/titleDonar" />
+        app:layout_constraintTop_toBottomOf="@+id/editFoodName" />
 
     <TextView
         android:id="@+id/quantityRequestor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="212dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="104dp"
         android:text="Select Quantity"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/foodName" />
+        app:layout_constraintTop_toBottomOf="@+id/description" />
 
     <NumberPicker
         android:id="@+id/editQuantity"
         android:layout_width="88dp"
         android:layout_height="63dp"
-        android:layout_marginTop="112dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.634"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="76dp"
+        app:layout_constraintStart_toEndOf="@+id/quantityRequestor"
         app:layout_constraintTop_toBottomOf="@+id/editDes" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

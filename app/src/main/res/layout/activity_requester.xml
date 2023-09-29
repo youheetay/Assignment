@@ -56,8 +56,8 @@
         android:id="@+id/numberPicker"
         android:layout_width="88dp"
         android:layout_height="63dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="108dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="112dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionR" />
 
@@ -87,25 +87,26 @@
         app:layout_constraintTop_toBottomOf="@+id/foodNameReq" />
 
     <Button
-        android:id="@+id/buttonR"
+        android:id="@+id/cancelR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="72dp"
-        android:text="Request"
-        app:layout_constraintEnd_toStartOf="@+id/cancelR"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="76dp"
+        android:text="Cancel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
-        android:id="@+id/cancelR"
+        android:id="@+id/buttonR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
-        android:layout_marginEnd="104dp"
-        android:text="Cancel"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="100dp"
+        android:text="Submit"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toEndOf="@+id/cancelR"
         app:layout_constraintTop_toBottomOf="@+id/numberPicker" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

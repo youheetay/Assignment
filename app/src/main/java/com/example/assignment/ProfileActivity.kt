@@ -1,5 +1,7 @@
 package com.example.assignment
 
+import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -27,6 +29,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var uid : String
     private lateinit var historyBtn: Button
+    private lateinit var dltProfileBtn : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +39,7 @@ class ProfileActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         uid = auth.currentUser?.uid.toString()
         historyBtn = findViewById(R.id.historyBtn)
+        dltProfileBtn = findViewById(R.id.dltProfileBtn)
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.buttonNavigationView)
 
@@ -44,10 +48,27 @@ class ProfileActivity : AppCompatActivity() {
         }
 
 
-        binding.logoutBtn.setOnClickListener{
+        binding.logoutBtn.setOnClickListener {
             auth.signOut()
-            startActivity( Intent(this,LoginActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
         }
+
+        binding.dltProfileBtn.setOnClickListener {
+            // Show a confirmation dialog
+            val alertDialogBuilder = AlertDialog.Builder(this)
+            alertDialogBuilder.setTitle("Delete Profile")
+            alertDialogBuilder.setMessage("Confirm to delete your profile?")
+            alertDialogBuilder.setPositiveButton("Delete") { _, _ ->
+                // Delete the user's profile
+                deleteUserProfile()
+            }
+            alertDialogBuilder.setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            alertDialogBuilder.show()
+        }
+
+
 
         binding.historyBtn.setOnClickListener{
             val historyIntent = Intent(this, HistoryViewActivity::class.java)
@@ -108,10 +129,39 @@ class ProfileActivity : AppCompatActivity() {
                         Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show()
                     }
                 }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Error getting user data: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Error getting user data: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        }
+
     }
 
-}
+    private fun deleteUserProfile() {
+        // Delete the user's profile from Firestore
+        val db = FirebaseFirestore.getInstance()
+        val userCollection = db.collection("user")
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if (currentUser != null) {
+            val userId = currentUser.uid
+
+            userCollection.document(userId)
+                .delete()
+                .addOnSuccessListener {
+                    // Profile deleted successfully from Firestore
+                    Toast.makeText(this, "Profile deleted successfully", Toast.LENGTH_SHORT).show()
+
+                    // Sign out the user and navigate to the login screen
+                    FirebaseAuth.getInstance().signOut()
+                    val loginIntent = Intent(this, LoginActivity::class.java)
+                    startActivity(loginIntent)
+                    finish() // Close the ProfileActivity
+                }
+                .addOnFailureListener { exception ->
+                    // Handle errors if profile deletion fails
+                    Toast.makeText(this, "Failed to delete profile: ${exception.message}", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
 }

@@ -8,49 +8,59 @@
     app:cardCornerRadius="8dp"
     android:layout_margin="16dp">
 
+
     <LinearLayout
-        android:layout_width="366dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="6dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:orientation="vertical">
 
+        <!-- Food Image -->
+        <ImageView
+            android:id="@+id/foodImage"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:scaleType="fitCenter" />
+
         <LinearLayout
-            android:layout_width="353dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <TextView
-                android:layout_width="149dp"
+                android:id="@+id/foodName"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:text="Food Name : "
+                android:layout_gravity="start"
+                android:layout_marginStart="16dp"
+                android:text="Food Name:"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <!-- Food Name -->
             <TextView
                 android:id="@+id/tvFoodName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="name"
+                android:layout_gravity="start"
+                android:layout_marginStart="16dp"
+                android:text="Food:"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
-
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- Description -->
         <LinearLayout
-            android:layout_width="346dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/foodDes"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:text="Food Description : "
+                android:layout_gravity="start"
+                android:layout_marginStart="16dp"
+                android:text="Food Description:"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -59,11 +69,40 @@
                 android:id="@+id/tvFoodDes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Description"
+                android:layout_gravity="start"
+                android:layout_marginStart="16dp"
+                android:text="Description:"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
+        <!-- Quantity -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/showQuantity"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Food Quantity:"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvFoodQty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="16dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <Button
@@ -73,6 +112,15 @@
             android:layout_marginRight="10dp"
             android:backgroundTint="#4CAF50"
             android:text="Approve" />
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#D32F2F"
+            android:text="Delete"
+            android:textColor="#FFFFFF"
+            android:textColorHighlight="#FF0000"
+            android:textColorLink="@color/purple_500" />
 
 
     </LinearLayout>

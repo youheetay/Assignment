@@ -1,5 +1,6 @@
 package com.example.assignment
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
@@ -63,7 +64,9 @@ private lateinit var myViewPagerAdapter : MyViewPagerAdapter
 
         // Set up the positive button and its click listener
         alertDialogBuilder.setPositiveButton("Yes") { dialog, _ ->
-            finish() // Close the current activity
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         // Set up the negative button and its click listener
